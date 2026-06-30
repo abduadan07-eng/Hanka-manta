@@ -572,11 +572,11 @@
             switchPage('hordhac');
         });
 
-        // 5. Soo bandhigista Post-iyada dhanka Front-end
-        function loadPosts() {
+                function loadPosts() {
             const container = document.getElementById('postsContainer');
             let posts = JSON.parse(localStorage.getItem('hanka_posts')) || [];
             
+            // Qaybta 1-aad (Default Post) oo mar walba oollaysa
             let defaultHTML = `
                 <article class="article-content">
                     <div class="article-meta">
@@ -601,6 +601,7 @@
                     </section>
                 </article>`;
 
+            // Halkan waxaan ku hagaajinnay in qoraalka cusub uu u jiri karo "white-space: pre-line" si khadadka u jabaan
             let dynamicHTML = posts.map(post => `
                 <article class="article-content">
                     <div class="article-meta">
@@ -609,7 +610,7 @@
                     </div>
                     <h2 class="article-title">${post.title}</h2>
                     <div class="article-body">
-                        <p>${post.body}</p>
+                        <p style="white-space: pre-line;">${post.body}</p>
                     </div>
                     <hr class="section-divider">
                     <section class="comments-section">
@@ -624,8 +625,10 @@
                 </article>
             `).join('');
 
+            // Halkan waxaan ku hubinnay in dynamicHTML (wixii aad soo post gareysay) lagu daro container-ka ka hor defaultHTML
             container.innerHTML = dynamicHTML + defaultHTML;
         }
+
 
         // 6. Farsamada Faallooyinka
         function addComment(e, form) {
