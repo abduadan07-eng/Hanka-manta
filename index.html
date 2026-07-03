@@ -1,668 +1,262 @@
 <!DOCTYPE html>
 <html lang="so">
 <head>
-    <meta name="monetag" content="30855943951a8a2c8d62d3c2b43358f7">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hanka Maanta - Taxanaha Taariikhda iyo Af-Soomaaliga</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;600;700&display=swap" rel="stylesheet">
-    
+    <title>Ciyaarta Erayada Qarsoon - Fixed V3</title>
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
     <style>
-        /* ==========================================================================
-           1. STYLING-KA GUUD (CSS)
-           ========================================================================== */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: #f7f9fa; color: #333; line-height: 1.6; }
-        .container { width: 90%; max-width: 1100px; margin: 0 auto; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #121212; color: #fff; text-align: center; padding: 15px; margin: 0; }
+        .box { background: #1e1e1e; padding: 20px; border-radius: 12px; max-width: 95%; margin: 20px auto; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid #2f2f2f; box-sizing: border-box; }
+        input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; font-size: 16px; box-sizing: border-box; }
+        input { background: #2a2a2a; color: white; border: 1px solid #444; }
+        button { background: #28a745; color: white; cursor: pointer; font-weight: bold; }
+        button:hover { background: #218838; }
+        .hidden { display: none; }
+        .status { color: #ffc107; font-weight: bold; margin-top: 15px; font-size: 14px; }
+        .room-title { color: #007bff; font-size: 24px; font-weight: bold; }
         
-        /* Header */
-        .main-header { background-color: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); padding: 15px 0; position: sticky; top: 0; z-index: 100; }
-        .header-flex { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 24px; color: #1a1a1a; cursor: pointer; }
-        .logo span { color: #0076f6; }
-        .main-nav button { background: none; border: none; color: #555; margin-left: 20px; font-weight: 600; font-size: 16px; cursor: pointer; transition: color 0.3s; padding: 5px 0; }
-        .main-nav button:hover, .main-nav button.active { color: #0076f6; border-bottom: 2px solid #0076f6; }
+        .scoreboard { display: flex; justify-content: space-between; background: #2a2a2a; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; font-weight: bold; }
+        .score-box { color: #28a745; }
 
-        /* Xayeysiis */
-        .ad-space { background-color: #eaeaea; border: 2px dashed #bbb; display: flex; justify-content: center; align-items: center; color: #777; font-size: 14px; border-radius: 5px; margin: 20px auto; }
-        .top-ad { height: 90px; }
-        .mid-ad { height: 120px; margin: 30px 0; }
-        .sidebar-ad { height: 250px; }
-        .ad-label { font-weight: 600; }
-
-        /* Bogagga qarsoomaya */
-        .page-section { display: none; }
-        .page-section.active-page { display: block; }
-
-        /* Layout */
-        .main-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-top: 20px; }
-        .article-content, .qaamuus-section, .contact-section, .admin-section { background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); margin-top: 20px; }
-        .article-meta { margin-bottom: 15px; }
-        .category { background: #e6f1fe; color: #0076f6; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-right: 10px; }
-        .date { font-size: 13px; color: #777; }
-        .article-title { font-size: 28px; margin-bottom: 20px; color: #111; }
-        .article-body p { margin-bottom: 20px; font-size: 16px; color: #444; text-align: justify; white-space: pre-line; }
-        .section-divider { border: 0; height: 1px; background: #eee; margin: 40px 0; }
-
-        /* Foomamka */
-        .comment-form input, .comment-form textarea, .contact-form input, .contact-form textarea, .search-box, .admin-form input, .admin-form textarea {
-            width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;
-        }
-        .btn-submit, .btn-subscribe, .btn-send, .btn-admin { background-color: #0076f6; color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; font-weight: 600; transition: background 0.3s; }
-        .btn-submit:hover, .btn-subscribe:hover, .btn-send:hover, .btn-admin:hover { background-color: #0056b3; }
-        .btn-send, .btn-admin { width: 100%; }
-
-        /* Sidebar */
-        .widget { background: #ffffff; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .widget h3 { font-size: 18px; margin-bottom: 15px; color: #111; }
-        .newsletter-widget p { font-size: 14px; color: #666; margin-bottom: 15px; }
-        .newsletter-form input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; }
-        .newsletter-form .btn-subscribe { width: 100%; }
-        
-        /* Qaybta Post-iyada ee soo kordhaya */
-        .posts-container { display: flex; flex-direction: column; gap: 30px; }
-
-        /* Faallooyinka */
-        .comments-list { margin-top: 30px; }
-        .comment-item { background: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 15px; border-left: 4px solid #0076f6; }
-
-        /* Qaamuuska */
-        .word-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-        .word-card { background: #f9f9f9; padding: 20px; border-radius: 5px; border-left: 4px solid #0076f6; }
-        .word-card h3 { color: #0076f6; margin-bottom: 10px; }
-
-        .max-width-contact { max-width: 600px; margin: 0 auto; }
-        .main-footer { text-align: center; padding: 30px 0; color: #777; font-size: 14px; margin-top: 40px; background: #ffffff; border-top: 1px solid #eee; }
-
-        @media (max-width: 768px) {
-            .main-layout { grid-template-columns: 1fr; }
-            .header-flex { flex-direction: column; gap: 15px; }
-            .main-nav button { margin: 0 10px; }
-            .word-grid { grid-template-columns: 1fr; }
-        }
+        #chat-box { background: #121212; height: 180px; overflow-y: auto; border-radius: 8px; border: 1px solid #333; padding: 10px; margin-top: 15px; text-align: left; }
+        .msg { margin-bottom: 8px; font-size: 14px; padding: 6px 10px; border-radius: 6px; display: inline-block; max-width: 85%; }
+        .msg.me { background: #007bff; color: white; float: right; clear: both; }
+        .msg.opponent { background: #333; color: white; float: left; clear: both; }
+        .msg.system { background: #ffc107; color: black; float: none; display: block; text-align: center; margin: 5px auto; }
+        #error-log { color: #ff4d4d; font-size: 12px; margin-top: 10px; text-align: left; background: #000; padding: 5px; border-radius: 4px; display: none; }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <header class="main-header">
-        <div class="container header-flex">
-            <h1 class="logo" onclick="switchPage('hordhac')">Hanka<span>Maanta</span></h1>
-            <nav class="main-nav">
-                <button id="nav-hordhac" class="active" onclick="switchPage('hordhac')">Hordhac</button>
-                <button id="nav-qaamuus" onclick="switchPage('qaamuus')">Qaamuuska</button>
-                <button id="nav-xiriir" onclick="switchPage('xiriir')">Nala Xiriir</button>
-                <button id="nav-admin" onclick="openAdmin()">Maamulka</button>
-            </nav>
+    <h2 style="margin-top: 20px;">Ciyaarta Erayada Qarsoon 🎮</h2>
+
+    <!-- 1. BOGGA HORE (LOBBY) -->
+    <div id="lobby-screen" class="box">
+        <h3>Ku Biir ama Samee Qol</h3>
+        <button onclick="createRoom()">Abuur Qol Cusub (Create)</button>
+        <div style="margin: 15px 0; color: #888;">— AMA —</div>
+        <input type="number" id="room-code-input" pattern="\d*" placeholder="Geli Koodka Qolka (Tusaale: 4532)">
+        <button onclick="joinRoom()" style="background: #007bff;">Ku Biir Qolka (Join)</button>
+    </div>
+
+    <!-- 2. BOGGA QARINTA ERAYADA -->
+    <div id="game-setup-screen" class="box hidden">
+        <h3>Qolka: <span id="current-room-id" class="room-title">----</span></h3>
+        <p>Qor erayga aad rabto inaad ka qariso saaxiibkaa!</p>
+        <input type="text" id="secret-word-input" placeholder="Tusaale: Ronaldo, Messi, Laptop...">
+        <button onclick="submitSecretWord()">Xaree Erayga</button>
+        <div id="status-msg" class="status">Kula xiriiraya server-ka...</div>
+    </div>
+
+    <!-- 3. BOGGA CIYAARTA -->
+    <div id="gameplay-screen" class="box hidden">
+        <div class="scoreboard">
+            <div>Adiga: <span id="my-score" class="score-box">0</span></div>
+            <div>Wareegga: <span id="round-number" style="color: #ffc107;">1</span></div>
+            <div>Saaxiibkaa: <span id="opponent-score" class="score-box">0</span></div>
         </div>
-    </header>
 
-    <div class="container ad-space top-ad">
-        <p class="ad-label">Xayeysiis (Top Ad Space)</p>
-    </div>
-
-    <!-- ==========================================================================
-       2. BOGGA HORDHACA & TAXANAHA (POSTS)
-       ========================================================================== */ -->
-    <div id="page-hordhac" class="container page-section active-page">
-        <main class="main-layout">
-            <div class="posts-container" id="postsContainer">
-                <!-- Post-ga default ah -->
-                <article class="article-content">
-                    <div class="article-meta">
-                        <span class="category">Taxanaha Taariikhda</span>
-                        <span class="date">Juun 29, 2026</span>
-                    </div>
-                    <h2 class="article-title">Qaybta 1-aad: Boqortooyooyinkii Hore iyo Asalka Ereyada Lumay</h2>
-                    <div class="article-body">
-                        <p>Kusoo dhowaada qaybta koobaad ee taxanaheena ku saabsan taariikhda qaniga ah ee geyiga iyo dib u soo nooleynta Af-Soomaaliga saxda ah. Maanta waxaynu daxalka ka rabi doonaa qaabkii ay u dhisnaayeen maamuladii hore iyo ereyadii ay isticmaali jireen odayaasheenu.</p>
-                    </div>
-                    <hr class="section-divider">
-                    
-                    <section class="comments-section">
-                        <h3>Aragtidaada Nala Wadaag</h3>
-                        <form class="comment-form" onsubmit="addComment(event, this)">
-                            <input type="text" placeholder="Magacaaga" required>
-                            <textarea rows="3" placeholder="Halkaan ku qor faalladaada..." required></textarea>
-                            <button type="submit" class="btn-submit">Soo Dir Faallada</button>
-                        </form>
-                        <div class="comments-list">
-                            <div class="comment-item">
-                                <strong>Cali Axmed</strong>
-                                <p>Runtii af-soomaaliga saxda ah waa mid loo baahan yahay in la barto.</p>
-                            </div>
-                        </div>
-                    </section>
-                </article>
-            </div>
-
-            <!-- Sidebar -->
-            <aside class="sidebar">
-                <div class="widget newsletter-widget">
-                    <h3>Ku Biir Akhristayaasha</h3>
-                    <p>Ku qor Email-kaaga si aad u hesho ogeysiis marka qaybta cuzub ay soo baxdo.</p>
-                    
-                    <form action="https://api.web3forms.com/submit" method="POST" class="newsletter-form">
-                        <input type="hidden" name="access_key" value="9fa12d82-248e-46da-95fc-ec085a2c1ad3">
-                        <input type="hidden" name="from_name" value="Hanka Maanta Newsletter">
-                        <input type="email" name="subscriber_email" placeholder="Email-kaaga" required>
-                        <button type="submit" class="btn-subscribe">Is-diiwaangeli</button>
-                    </form>
-                </div>
-                <div class="ad-space sidebar-ad">
-                    <p class="ad-label">Xayeysiis (Sidebar Ad)</p>
-                </div>
-            </aside>
-        </main>
-    </div>
-
-    <!-- ==========================================================================
-       3. BOGGA QAAMUUSKA (XOGTA DATA-DA WAA LAAKA SOCDAALAYAA)
-       ========================================================================== */ -->
-    <div id="page-qaamuus" class="container page-section">
-        <section class="qaamuus-section">
-            <h2 class="article-title">Qaamuuska Ereyada Lumay</h2>
-            <p style="margin-bottom: 20px; color: #666;">Halkaan ka raadi ereyada asalka u ah hiddaha iyo dhaqanka Soomaaliyeed.</p>
-            <input type="text" id="searchBar" class="search-box" placeholder="Ka raadi erey kasta halkaan...">
-            
-            <!-- JavaScript ayaa halkan ku shubaysa ereyada oo dhan -->
-            <div class="word-grid" id="wordGrid"></div>
-        </section>
-    </div>
-
-    <!-- ==========================================================================
-       4. BOGGA NALA XIRIIR
-       ========================================================================== */ -->
-    <div id="page-xiriir" class="container page-section">
-        <div class="max-width-contact">
-            <section class="contact-section">
-                <h2 class="article-title">Nala Xiriir sxb</h2>
-                <form action="https://api.web3forms.com/submit" method="POST" class="contact-form">
-                    <input type="hidden" name="access_key" value="9fa12d82-248e-46da-95fc-ec085a2c1ad3">
-                    <input type="text" name="name" placeholder="Magacaaga" required>
-                    <input type="email" name="email" placeholder="Email-kaaga" required>
-                    <textarea name="message" rows="5" placeholder="Fariintaada..." required></textarea>
-                    <button type="submit" class="btn-send">Soo Dir Fariinta</button>
-                </form>
-            </section>
+        <p id="game-instruction" style="font-size: 14px; color: #aaa;">U sheeg saaxiibkaa tilmaam ka caawisa inuu helo eraygaaga.</p>
+        
+        <div id="chat-box">
+            <div class="msg system">Wareeggii 1-aad wuxuu u bilaamay si rasmi ah!</div>
         </div>
-    </div>
 
-    <!-- ==========================================================================
-       5. QAYBTA MAAMULKA (ADMIN PANEL - QARSOON)
-       ========================================================================== */ -->
-    <div id="page-admin" class="container page-section">
-        <div class="max-width-contact">
-            <section class="admin-section">
-                <h2 class="article-title">Soo Geli Taxane Cusub (Admin)</h2>
-                <form class="admin-form" id="adminForm">
-                    <input type="text" id="postTitle" placeholder="Cinwaanka Maqaalka (Tusaale: Qaybta 2-aad...)" required>
-                    <textarea id="postBody" rows="10" placeholder="Halkaan ku qor qoraalka maqaalka oo dhan..." required></textarea>
-                    <button type="submit" class="btn-admin">Daabac Maqaalka (Publish)</button>
-                </form>
-            </section>
+        <div id="input-area" style="display: flex; gap: 8px; margin-top: 10px;">
+            <input type="text" id="chat-input" placeholder="Qor fariin ama mala-awaalka..." style="flex: 4; margin: 0;">
+            <button onclick="sendChatMessage()" style="flex: 1; margin: 0; background: #007bff;">Dir</button>
         </div>
+
+        <button id="next-round-btn" onclick="startNextRound()" style="background: #ffc107; color: black; display: none; margin-top: 15px;">Wareegga Xiga (Next Round) ➡️</button>
     </div>
 
-    <!-- Footer -->
-    <footer class="main-footer">
-        <p>&copy; 2026 Hanka Maanta. Xuquuqda oo dhan waa dhowran tahay.</p>
-    </footer>
-<!-- Batoonka Xayeysiiska Monetag -->
-<div style="text-align: center; margin: 20px 0;">
-    <a href="https://omg10.com/4/11217910" target="_blank" style="background-color: #0076f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        🚀 Ku Biiri Ereyo Cusub / Taageer Qaamuuska
-    </a>
-</div>
+    <!-- Meesha cilladaha lagu qorayo haday jiraan -->
+    <div class="box" style="margin-top: 10px; padding: 10px; background: #111;">
+        <div style="font-size: 12px; color: #666;">Nidaamka Monitor-ka: <span id="net-status" style="color: #28a745;">Online</span></div>
+        <div id="error-log"></div>
+    </div>
 
-    <!-- ==========================================================================
-       6. FARSAMADA JAVASCRIPT
-       ========================================================================== */ -->
     <script>
-        // ==========================================================================
-        // LIISKA ERYADA QAAMUUSKA (HALKAAN KU DAR KULLI EREYADA CUSUB SXB!)
-        // ==========================================================================
-        const qaamuusData = [
-               { erey: "Abaal-marin", macnaha: "Sharaf ama hadiyad la siiyo qof shaqo ama guul muujiyay.", tusaale: "Ardayda kaalmaha hore gashay waxay mudan yihiin abaal-marin." },
-    { erey: "Abbaanduul", macnaha: "Hoggaamiyaha ciidanka ama qofka horkaca hawl-galka dagaalka.", tusaale: "Abbaanduulihii wuxuu diyaariyay qorshaha difaaca geyiga." },
-    { erey: "Abtirsiinyo", macnaha: "Is-raacinta magacyada aabayaasha si loo ogaado tirsiga qoyska.", tusaale: "Odaygu wuxuu si sahal ah u sheegay abtirsiinyadiisa faca weyn." },
-    { erey: "Abaal-la'aan", macnaha: "In qof loo galay wanaag uu gudan waayo ama uu inkiro.", tusaale: "Abaal-la'aantu waa dhaqan ka reebban suubnaanta bulshada." },
-    { erey: "Abaal-gud", macnaha: "Gudashada ama celinta wanaag hore laguu galay.", tusaale: "Inaad dalka u shaqayso waa abaal-gudka ugu weyn ee muwaadinka." },
-    { erey: "Abaar", macnaha: "Xilli adag oo roob la'aan iyo biyo la'aan ahi ka jirto dhulka.", tusaale: "Guurtidu waxay ku baaqday gurmad loo fariisto dadka ay abaartu saameysay." },
-    { erey: "Abaabul", macnaha: "Iskuduba-ridka dadka ama agabka si hawl gaar ah loo fuliyo.", tusaale: "Abaabulka dhalinyarada wuxuu sahlayaa horumarka deegaanka." },
-    { erey: "Abbaar", macnaha: "Jiho toosan ama u dhowaanshaha meel l loo socdo.", tusaale: "Safarkayagu wuxuu u abbaaray dhanka waqooyi ee dalka." },
-    { erey: "Abooto", macnaha: "Erey loo isticmaalo ayeeyada ama haweenka waayeelka ah ee la xurmeeyo.", tusaale: "Abootada waxay noo sheegtay sheekooyin murtidu ku dhex jirto." },
-    { erey: "Abwaan", macnaha: "Qof leh hibo maskaxeed oo uu ku curiyo maansooyin miisaaman.", tusaale: "Abwaanku wuxuu tiriyay gabay dhiirigelin u ah barbaarta." },
-    { erey: "Aboor", macnaha: "Cayayaan yaryar oo dhisa dundumooyinka, kharribaadna u geysta qoryaha.", tusaale: "Aboorku wuxuu waxyeelo weyn u geystay saqafka guriga qadiimiga ah." },
-    { erey: "Adgadayg", macnaha: "Karti, dhabar-adayg, iyo adkaysi loo muujiyo xaaladaha adag.", tusaale: "Ganacsatadu waxay muujiyeen adgadayg weyn xilligii sicir-bararka." },
-    { erey: "Adeeg", macnaha: "Shaqo ama waxqabad loo qabto dadweynaha si nolosha loo fududeeyo.", tusaale: "Adeegga caafimaadka ee bilaashka ah waa xaq muwaadinka." },
-    { erey: "Adeb", macnaha: "Dhaqan wanaagsan, asluub, iyo ilaalinta xurmada bulshada.", tusaale: "Ardayga edebta badan waxaa jecel macallimiinta oo dhan." },
-    { erey: "Af-garad", macnaha: "Isfaham hoose ama heshiis dhexmara laba dhinac iyadoo aan buuq jirin.", tusaale: "Wadahadalkii madaxda wuxuu ku dhammaaday af-garad buuxa." },
-    { erey: "Aftahan", macnaha: "Qof ku xeeldheer hadalka, murtida, iyo soo jiidashada dadka.", tusaale: "Hoggaamiyaha runta ahi waa mid aftahan ah oo dadka qancin kara." },
-    { erey: "Af-gobaadsi", macnaha: "Hadal macaan oo qof lagu qancinayo laakiin aan qalbiga jirin.", tusaale: "Siyaasigu wuxuu isticmaalay af-gobaadsi si uu cod u helo." },
-    { erey: "Agab", macnaha: "Qalabka iyo agabka loo isticmaalo shaqooyinka maalinlaha ah.", tusaale: "Agabka dugsiga oo dhammaystiran wuxuu caawiyaa waxbarashada." },
-    { erey: "Agab-dhige", macnaha: "Meel ama bakhaar si ammaan ah loogu kaydiyo agabka shaqada.", tusaale: "Agab-dhigaha guud ee shirkadda waxaa lagu kormeeray si joogto ah." },
-    { erey: "Albaab", macnaha: "Meesha laga galo guriga ama qolka, sidoo kale loo isticmaalo fursadaha.", tusaale: "Waxbarashadu waa albaabka laga galo guusha mustaqbalka." },
-    { erey: "Ammaan", macnaha: "Sugnaan iyo nabadgelyo buuxda oo meel ka jirta.", tusaale: "Geyigeenu wuxuu u baahan yahay ammaan iyo kala dambayn." },
-    { erey: "Ammaan-gale", macnaha: "Qof ama meel lagu kalsoon yahay oo sir iyo hanti lagu aamini karo.", tusaale: "Odaygu wuxuu ahaa ammaan-gale bulshadu u soo dhimmato." },
-    { erey: "Amakaag", macnaha: "La yaab iyo yaab weyn oo ka dhasha dhacdo aan la filayn.", tusaale: "Warka ku saabsan guusha degdegga ah wuxuu noqday amakaag." },
-    { erey: "Anshax", macnaha: "Xeerarka hab-dhaqanka suuban ee bulshadu isku maamusho.", tusaale: "Anshaxa suuban iyo xushmadu waa astaanta koowaad ee aqoonta." },
-    { erey: "Aqoonyahan", macnaha: "Qof bartay cilmi heer sare ah, aqoon qotodheerna u leh maadadiisa.", tusaale: "Aqoonyahanka dalku waa laf-dhabarta horumarka bulshada." },
-    { erey: "Aqoorsi", macnaha: "In si qoto dheer loo barto nuxurka iyo fahamka wax cusub.", tusaale: "Aqoorsiga culuumta casriga ah waa furaha horumarka dhalinyarada." },
-    { erey: "Aragti", macnaha: "Fikrad, fikrad-duwan, ama nidaam wax loo arko.", tusaale: "Aragtida fog ee maamulka ayaa horseeday isbeddelka maanta." },
-    { erey: "Arag-fog", macnaha: "Kartida qofku u leeyahay inuu sii saadaaliyo dhibaatooyinka ama guulaha mustaqbalka.", tusaale: "Hoggaamiyee arag-fog ayaa dalka ka saari kara xaaladaha adag." },
-    { erey: "Arraweelo", macnaha: "Calaamad loo isticmaalo qof dumar ah oo adgadayg iyo hoggaan adag muujisa.", tusaale: "Taariikhda dhexdeeda, magaca Arraweelo wuxuu leeyahay miisaan weyn." },
-    { erey: "Asli", macnaha: "Wax walba oo ku jira sidiisii hore ee rasmiga ahaa oo aan la dhalanrogon.", tusaale: "Dhaqankani waa mid asli ah oo naga soo gaaray odayaasheenii." },
-    { erey: "Asluub", macnaha: "Dhaqan wanaagsan, edeb, iyo hab-dhaqan suuban.", tusaale: "Dhalinyarada asluubta leh waxay astaan u yihiin mustaqbal ifaya." },
-    { erey: "Awood", macnaha: "Xoog, karti, ama maamul wax lagu fulin karo.", tusaale: "Dawladnimadu waxay u baahan yahay awood sharciga lagu fuliyo." },
-    { erey: "Awood-baahin", macnaha: "In qaybaha dawladda iyo gobollada loo daadajiyo nidaamka maamulka.", tusaale: "Awood-baahintu waxay fududaysaa in adeeggu gaaro degmo kasta." },
-    { erey: "Aayatiin", macnaha: "Mustaqbalka dambe ee nolosha qofka ama umadda.", tusaale: "Waxbarashada barbaarta waa aayatiinka suuban ee geyiga." },
-    { erey: "Baadi-goob", macnaha: "Raadinta wax lumay, xog maqan, ama yool la rabo in la helo.", tusaale: "Dhalinyaradu waxay ku jiraan baadi-goobka taariikhda saxda ah ee geyiga." },
-    { erey: "Baaxad", macnaha: "Baaxadda, weynida, ama masaafada ballaaran ee shay ama dhul leeyahay.", tusaale: "Badda Soomaaliya waxay leedahay baaxad weyn iyo khayraad badan." },
-    { erey: "Badhaadhe", macnaha: "Nasteexo, barwaaqo, iyo nolol ku dhex dhisnaatay nabad iyo xasilooni.", tusaale: "Bulshadu waxay gashay xilli badhaadhe ah ka dib markii khilaafkii la xalliyay." },
-    { erey: "Badbaado", macnaha: "Ka bixidda ama ka samatabixidda xaalad khatar ama dhib ah.", tusaale: "Gargaarku wuxuu noqday badbaado loo fidyay dadkii ku dhibaataysnaa abaaraha." },
-    { erey: "Balan-qaad", macnaha: "Go'aan iyo ballan rasmi ah oo qofku galo si uu hawl u qabto.", tusaale: "Balan-qaadkii maamulka ee ahaa dhisidda dugsiga waa la fuliyay." },
-    { erey: "Bar-tilmaameed", macnaha: "Halka saxda ah ama yoolka gaarka ah ee la rabo in la gaaro.", tusaale: "Bar-tilmaameedkayagu waa inaan caawino boqol qoys oo dhibaataysan." },
-    { erey: "Barbaarta", macnaha: "Dhalinyarada xoogga, maskaxda, iyo rajada u ah bulshada berrito.", tusaale: "Barbaarta maanta waa hoggaanka iyo laf-dhabarta berrito." },
-    { erey: "Barrin", macnaha: "Meel ama deegaan cayiman oo dadku u soo hoydaan ama ku kulmaan.", tusaale: "Barrinkaas wuxuu ahaa meeshii ay ku heshiisay ergooyinkii nabadda." },
-    { erey: "Barwaaqo", macnaha: "Abaarta oo dhammaata iyo helitaanka doog, roob, iyo nimco saaddid ah.", tusaale: "Roobabkii gu'ga waxay keeneen barwaaqo weyn oo geyiga ku baahday." },
-    { erey: "Baxnaano", macnaha: "Daryeel iyo daawayn gaar ah oo la siiyo qof xanuunsan ama daciif ah.", tusaale: "Cisbitaalka cusub wuxuu leeyahay qayb loogu talagalay baxnaanada dadka waayeelka ah." },
-    { erey: "Beegsi", macnaha: "In si toos ah loo abbaaro ama loo yoolbarto meel ama ujeedo gaar ah.", tusaale: "Beegsiga koowaad ee shirkadda waa ballaarinta adeegga internetka." },
-    { erey: "Beerasho", macnaha: "Aqoonta iyo shaqada dhulka lagu falayo si looga soo saaro dalag.", tusaale: "Beerashada dhulku waa laf-dhabarta isku-fillaanshaha cuntada dalka." },
-    { erey: "Bilic", macnaha: "Quruxda dabiiciga ah, bilicda, iyo bilicda nadiifta ah ee deegaanka.", tusaale: "Magaalooyinka xeebaha ah waxay caan ku yihiin bilicda dabiiciga ah." },
-    { erey: "Billad", macnaha: "Abaalmarin bir ama maaddo kale ah oo la siiyo dadka guulaha keena.", tusaale: "Wuxuu ku guuleystay billaddii ugu sarreysay ee hal-abuurka dhalinyarada." },
-    { erey: "Bisayl", macnaha: "Garaadka iyo caqliga qofka oo gaara heer uu wax u rari karo si degan.", tusaale: "Hoggaamiyuhu wuxuu muujiyay bisayl siyaasadeed xilligii wadahadalka." },
-    { erey: "Bogasho", macnaha: "Ku qancid, ku farxid, ama ku diirsasho waxaad akhrisay ama maqashay.", tusaale: "Bogasho wacan iyo akhris wanaagsan sxb." },
-    { erey: "Bullaandhe", macnaha: "Hadal ama sumcad weyn oo qof ama shay uu ku dhex leeyahay bulshada.", tusaale: "Haddiyaddan waxay leedahay bullaandhe iyo miisaan weyn." },
-    { erey: "Buraashad", macnaha: "Weel yar oo biyo laguu shubto, ama tusaale ahaan calaamad lagu garto kaydka.", tusaale: "Buraashaddii biyaha ayaa noogu badbaado ahayd safarka miyiga." },
-    { erey: "Buran", macnaha: "Waqti ama xilli ay wax walba u dhow yihiin sidii loo qorsheeyay.", tusaale: "Hawshu waxay ku dhammaatay xilli buran iyo jawi degan." },
-    { erey: "Burbur", macnaha: "Wax kasta oo dumay ama burburay nidaam ahaan ama dhismo ahaan.", tusaale: "Dagaaladu waxay reebaan burbur iyo dib-u-dhac joogto ah." },
-    { erey: "Caaqil", macnaha: "Hoggaamiye dhaqameed garasho dheer oo reer u metela talada.", tusaale: "Caaqilku wuxuu xalliyay khilaafkii dhexmaray dhalinyarada deegaanka." },
-    { erey: "Caddaalad", macnaha: "In qof kasta la siiyo xuquuqda uu leeyahay iyadoon la eexan ama la gar-gaddoomin.", tusaale: "Halkii caddaalad ay tahto, nabadgelyo iyo xasillooni baa dhalata." },
-    { erey: "Caddaalad-doon", macnaha: "Qof ama koox u taagan raadinta iyo u halgamidda xaqa iyo sinnaanta.", tusaale: "Hanka Maanta waa madal ay ku kulmaan dhalinyarada caddaalad-doonka ah." },
-    { erey: "Caddayn", macnaha: "Keenista marag ama xog sugan oo runta lagu xoojinayo.", tusaale: "Baaritaanka cilmiga ahi wuxuu u baahan yahay caddayn dhab ah iyo baadhitaan qoto dheer." },
-    { erey: "Cafis", macnaha: "In qof khalad kaa galay aad dambi dhaaf u fidiso si niyad sami ah.", tusaale: "Cafisku wuxuu sifeeyaa quluubta wuxuuna dhashaa is-jacayl iyo isku-duubni." },
-    { erey: "Cajabaad", macnaha: "Dareen la yaab iyo ku qancid leh oo ka dhasha wax qurux ama qiimo weyn leh.", tusaale: "Suugaanta reer miyiga waxay kaga tagtay dadkii dhegeysanayay cajabaad weyn." },
-    { erey: "Calan-side", macnaha: "Qofka hortaagan ama u taagan guusha iyo astaan-u-noqoshada umadda.", tusaale: "Aqoonyahanku waa calan-sidaha horumarka iyo aqoonta dalka." },
-    { erey: "Canaan", macnaha: "Hadal lagu saxayo ama lagu canaananayo qof khalad sameeyay si uusan u kufrin.", tusaale: "Canaanta waalidku waa mid hagis iyo nasteexo ku dhisnaan karta." },
-    { erey: "Canshuur", macnaha: "Lacagta lagu kabo horumarka dalka oo laga qaado muwaadiniinta sharciga horteeda.", tusaale: "Bixinta canshuurtu waa waajib saaran muwaadin kasta oo dalka degan." },
-    { erey: "Cariiri", macnaha: "Xaalad adag, ciriiri ah, ama meel aan waasac ahayn oo dhib wadata.", tusaale: "Dhaqaalaha dunidu wuxuu marayaa marxalad cariiri ah oo isbeddel badan." },
-    { erey: "Cariish", macnaha: "Guri fudud oo ka dhisma qoryo iyo baaro, inta badanna laga dhisto tuulooyinka.", tusaale: "Odaygu wuxuu fadhiyay cariishkiisa weyn ee ku yaalla darafka beerta." },
-    { erey: "Caqli", macnaha: "Awoodda maskaxeed ee qofku u leeyahay inuu wax ku fikiro, ku kala saaro sax iyo khald.", tusaale: "Go'aan kasta wuxuu u baahan yahay caqli fiyow iyo deggenaan." },
-    { erey: "Ceeb", macnaha: "Wax kasta oo ka horimaanaya anshaxa suuban, diinta, iyo sharafta bulshada.", tusaale: "In qof daciif ah ama waayeel ah la dhibaateeyo waa ceeb weyn." },
-    { erey: "Cid-gale", macnaha: "Qof si qoto dheer u yaqaana deegaanka, ciidda, iyo jidadka miyiga.", tusaale: "Odayga ciid-galaha ah wuxuu na tusay waddo gaaban oo nabad ah." },
-    { erey: "Cilmi", macnaha: "Aqoon kororsi, barasho, iyo fahamka cilmiyaysan ee wax kasta oo aduunka jira.", tusaale: "Cilmigu waa nuurka ugu weyn ee hagaya nolosha aadanaha." },
-    { erey: "Cilmi-baaris", macnaha: "Dadaal cilmiyaysan oo loo galo helitaanka xog iyo xaqiiqooyin cusub oo sugan.", tusaale: "Cilmi-baarista afka Soomaaliga waxay u baahan tahay maalgelin iyo dhiirigelin." },
-    { erey: "Cisho", macnaha: "Maalin ama waqti cayiman oo kooban oo nolol dhexdeeda ah.", tusaale: "Cisho ka dib, hawsha oo dhammaystiran ayaa la soo bandhigi doonaa." },
-    { erey: "Curan", macnaha: "Curinta ama keenista fikrad, maanso, ama qoraal cusub oo aan horay loo dhihi.", tusaale: "Abwaanku wuxuu caan ku yahay curinta suugaanta tayada leh." },
-    { erey: "Curis", macnaha: "Fikrad ama qoraal cusub oo qofku maskaxdiisa iyo garaadkiisa ka soo miiray.", tusaale: "Curiska ardayga ee ku saabsan hiddaha ayaa noqotay tii ugu wanaagsanayd." },
-    { erey: "Cuud", macnaha: "Hanti, gaar ahaan xoolaha nool sida geela iyo fardaha oo qiimo weyn leh.", tusaale: "Odayga cuudkiisu wuxuu u badnaa geel dhalaya oo daryeel leh." },
-    { erey: "Daacadnimo", macnaha: "Run-sheegnimo, hufnaan, iyo in qofku si run ah u guto waajibaadkiisa.", tusaale: "Daacadnimadu waa furaha koowaad ee lagu kasbado kalsoonida dadka." },
-    { erey: "Dalaal", macnaha: "Qofka u dhexeeya laba dhinac oo ganacsi isku xiraya, qaadanayana khidmad.", tusaale: "Dalaalkii wuxuu gacan ka geystay in beertii si degdeg ah loo iibiyo." },
-    { erey: "Dalag", macnaha: "Wixii ka soo baxa beeraha ee la cuno sida galleyda, hordada, iyo khudaarta.", tusaale: "Beeralaydu waxay soo gooyeen dalag aad u badan ka dib roobabkii gu'ga." },
-    { erey: "Danyar", macnaha: "Dadka dakhligoodu hooseeyo ama hanti ahaan daciifka ka ah bulshada dhexdeeda.", tusaale: "Dawladdu waxay qorsheysay mashaariic lagu caawinayo qoysaska danyarta ah." },
-    { erey: "Daryeel", macnaha: "Xanaano, korjoogteynta, iyo ilaalinta caafimaadka ama fayoobida qof ama shay.", tusaale: "Carruurtu waxay u baahan yihiin daryeel, aqoon, iyo barbaarin wanaagsan." },
-    { erey: "Daxalka", macnaha: "Waxyaabihii qadiimiga ahaa, hiddaha, ama hantida laga dhaxlay odayaashii hore.", tusaale: "Maanta waxaynu daxalka ka rabi doonaa qaabkii maamuladii hore." },
-    { erey: "Dayax-gacmeed", macnaha: "Agab tignoolajiyadeed oo hawada loo diro si uu xog iyo isgaarsiin u soo gudbiyo.", tusaale: "Dayax-gacmeedka casriga ah wuxuu fududeeyay internet-ka xawaaraha dhow weyn." },
-    { erey: "Debecsanaan", macnaha: "Naxariis, dabacsanaan, iyo in dadka si deggan loola macaamilo.", tusaale: "Hoggaamiyaha debecsanaantiisu waxay u soo jiaddaa jacaylka dadka weyn." },
-    { erey: "Degganaan", macnaha: "Xaalad nabad ah oo aan lahayn buuq, dagaal, ama khalkhal deggenaansho la'aan.", tusaale: "Magaaladu waxay ku soo laabatay deggenaansheedii caadiga ahaa ka dib wadahadalkii." },
-    { erey: "Dhabar-adayg", macnaha: "Dulqaad dhab ah iyo u dhabar-adaygista caqabadaha si yoolka loo gaaro.", tusaale: "Guushu waxay ku timaaddaa dhabar-adayg iyo shaqo adag oo joogto ah." },
-    { erey: "Dhagar", macnaha: "Khayaano, xeelad xun, ama hagar-daamo si hoose loogu waxyeelleeyo qof kale.", tusaale: "Waa inaan ka fogaanaa wax kasta oo dhagar iyo isku-dir u keeni kara bulshada." },
-    { erey: "Dhammaystir", macnaha: "In hawl ama qoraal la geeyo heerarkii ugu dambeeyay ee loogu talagalay.", tusaale: "Kooxda farsamadu waxay ku guda jirtaa dhammaystiriinta bogga internetka." },
-    { erey: "Dhaxal", macnaha: "Hanti, dhaqan, ama aqoon qiimo leh oo laga dhaxlo dadkii naga horreeyay.", tusaale: "Af-Soomaaligu waa dhaxal qaali ah oo ay tahay inaan dhowrno oo daryeelno." },
-    { erey: "Dhaxal-gal", macnaha: "Waqti, dhacdo, ama wax qoraal ah oo reeba raad qiimo leh oo aan waligiis duugoobin.", tusaale: "Buugga taariikhdu waa shaqo dhaxal-gal ah oo jiilal badan faaiido u leh." },
-    { erey: "Dhedo", macnaha: "Dhibco biyo ah oo subaxdii hore laga helo caleemaha dushooda xilliga qaboobaha.", tusaale: "Dhedadii subaxnimo waxay qoysay dhirta baadiyaha dushooda." },
-    { erey: "Dhiiranaan", macnaha: "Geesinimo, dhiiranaan, iyo isku-kalsoonaan qofku u leeyahay inuu ficil sameeyo.", tusaale: "Hoggaamiyaha cusub wuxuu u baahan yahay dhiiranaan buuxda oo uu go'aan ku qaato." },
-    { erey: "Dhiirigelin", macnaha: "In qofka maskaxda laga dhisho si uu u yeesho firfircooni iyo dhiiranaan.", tusaale: "Hadalka iyo dhiirigelinta macallinku waxay ii ahaayeen dhiirigelin weyn." },
-    { erey: "Dhoof", macnaha: "U safarida dalal dibadda ah si ganacsi, waxbarasho, ama deegaan ah.", tusaale: "Dhoofka xoolaha nool wuxuu kor u qaadaa dhaqaalaha iyo dakhliga dalka." },
-    { erey: "Dhowrsanaan", macnaha: "Ka fogaanshaha xumaanta, musuqmaasaqa, iyo ceebaha nolosha dhexdeeda.", tusaale: "Nolosha wanaagsan waxay ku dhisantaa dhowrsanaan iyo xalaal-miiradnimo dhab ah." },
-    { erey: "Dhool-bari", macnaha: "Muujinta dhoolacaddeyn iyo soo dhoweyn diiran oo niyadsami leh.", tusaale: "Soo dhoweynta dhool-bariga ah waxay abuurtaa saaxiibtinimo dhab ah." },
-    { erey: "Dhuun-gale", macnaha: "Qof si hoose u dhex gala koox ama nidaam si uu xog u basaaso ama u xado.", tusaale: "Laamaha ammaanka ayaa qabtay dhuun-gale isku dayayay inuu khalkhal abuuro." },
-    { erey: "Dilbax", macnaha: "Qof khibrad, xeeldheeri, iyo aqoon sare u leh hawl ama farsamo gaar ah.", tusaale: "Injineerkani waa dilbax yaqaana farsamada casriga ah iyo koodhka." },
-    { erey: "Dirir", macnaha: "Dagaal, iska horimaad, ama khilaaf gacan ka hadal ah oo waxyeelo keena.", tusaale: "Dirirtu waxay keentaa burbur, dib-u-dhac, iyo barakac keliya." },
-    { erey: "Doog", macnaha: "Astaanta cagaarka iyo doogga nafaqada leh ee soo baxa roobka ka dib.", tusaale: "Miyiga waxaa daboolay doog iyo dihin qurux badan oo indhaha u roon." },
-    { erey: "Dulqaad", macnaha: "U dhabar-adaygista arrimaha aan la jeclayn iyadoo aan laga caban.", tusaale: "Dulqaadku waa furaha guusha dhabta ah ee xaalad kasta oo nolosha ah." },
-    { erey: "Duunyo", macnaha: "Xoolaha nool ee dadku dhaqdaan sida geela, lo'da, iyo arfaha.", tusaale: "Nolosha miyiga waxay inta badan ku tiirsan tahay duunyada iyo caanaha." },
-    { erey: "Duur-joog", macnaha: "Xayawaanka ku nool kaymaha ama miyiga ee aan la rabaayadeyn.", tusaale: "Geyiga Soomaaliya wuxuu caan ku yahay duur-joogta kala duwan ee dhifka ah." },
-    { erey: "Eebbe", macnaha: "Abuuraha caalamka (Ilaahay) ee keligiis la caabudo, naxariistaha ah.", tusaale: "Waxaan Eebbe ka baryaynaa nabad, caafimaad, iyo barwaaqo joogto ah." },
-    { erey: "Edeb", macnaha: "Dhaqan wanaagsan, xurmo, asluub, iyo ilaalinta anshaxa guud ee bulshada.", tusaale: "Edebta iyo xushmadu waa astaanta ugu horreysa ee lagu garto qofka aqoonta leh." },
-    { erey: "Eex", macnaha: "Gar-gaddoon ama in qof si gaar ah loo raajiciyo ama loo hiiliyo isagoo khaldan.", tusaale: "Eexdu waxay burburisaa kalsoonida bulshada, waxayna dawaysaa caddaaladda." },
-    { erey: "Eegmo", macnaha: "In si fiican, fiirsasho leh, ama taxaddar leh loo jalleeco shay ama qof.", tusaale: "Eegmada hore ee sawirka waxay ku tusaysaa bilicda baaxadda weyn ee deegaanka." },
-    { erey: "Eel", macnaha: "Dhibaato, boog, ama dhib dambe oo reeba raad xanuun badan oo aan sahlanayn in la illoobo.", tusaale: "Dagaaladii sokeeye waxay reebeen eel weyn oo u baahan heshiis iyo bogasho." },
-    { erey: "Eray-bixin", macnaha: "Dejinta, samaynta, ama curinta ereyo cusub oo afka lagu ballaarinayo.", tusaale: "Guddiga afku wuxuu wadaa eray-bixinta agabka tignoolajiyada iyo koodhka." },
-    { erey: "Eray-ku-kab", macnaha: "In erey cusub lagu kabo mid kale si loo ballaariyo ama loo caddayo macnaha afka.", tusaale: "Farsamada casriga ah waxay u baahan tahay eray-ku-kab joogto ah si loo fahmo culuumta." },
-    { erey: "Ergo", macnaha: "Koox dad ah oo loo xilsaaray ama loo diro meel si ay nabad, wadahadal, ama heshiis u soo sameeyaan.", tusaale: "Ergadii nabadda ayaa ku guuleystay inay dhex gasho labadii dhinac ee is hayey." },
-    { erey: "Ergaysi", macnaha: "Habka ama nidaamka loo diro fariin ama ergo rasmi ah oo matalaysa qoys ama qaran.", tusaale: "Ergaysiga odayaasha wuxuu fududeeyay in la damiyo colaaddii miyiga ka dhalatay." },
-    { erey: "Esaas", macnaha: "Aasaaska, saldhigga, ama asalka wax kasta oo la dhisayo ama la yagleelayo.", tusaale: "Kalsoonida dhabta ah waa esaaska ama aasaaska saaxiibtinimada waarta." },
-    { erey: "Faaiido", macnaha: "Dheeri, manfaaco, ama wax wanaagsan oo laga helo shaqo, ganacsi, ama aqoon.", tusaale: "Waxbarashadu waxay leedahay faaiido aan waligeed dhammaanayn." },
-    { erey: "Fagaaro", macnaha: "Meel weyn oo furan oo ay dadku isugu yimaadaan si ay wax u dhegeystaan ama uga doodaan.", tusaale: "Maqaalka iyo go'aanka cusub waxaa lagu akhriyay fagaaraha weyn." },
-    { erey: "Fakar-celin", macnaha: "In dib loo eego, laga jawaabo, ama laga doodo fikrad hore loo soo jeediyay.", tusaale: "Fakar-celinta macaamiisha ayaa naga caawisay hagaajinta adeegga." },
-    { erey: "Falasho", macnaha: "Qodidda iyo diyaarinta dhulka beeraha si looga soo saaro dalag la cuno.", tusaale: "Falashada dhulka hooyo waa laf-dhabarta isku-fillaanshaha cuntada dalka." },
-    { erey: "Farsamo", macnaha: "Aqoonta, xirfadda, iyo qaabka wax loo dhiso ama loo sameeyo.", tusaale: "Tignoolajiyada casriga ahi waxay ku dhisantay farsamo aad u sarreysa." },
-    { erey: "Fidno", macnaha: "Khilaaf, isku-dir, ama dhibaato dhexmarta dad wada degan ama walaalo ah.", tusaale: "Waa inaan ka fogaanaa wax kasta oo fidno iyo kala qeybsanaan abuuri kara." },
-    { erey: "Filasho", macnaha: "Rajada ama waxa uu qofku ka filayo in ay mustaqbalka u dhacaan.", tusaale: "Filashada bulshada ee sanadkan cusub waa mid aad u sarreysa." },
-    { erey: "Fogaan-arag", macnaha: "Awoodda iyo garashada qofku u leeyahay inuu sii qorsheeyo mustaqbalka fog.", tusaale: "Hoggaamiyaha fogaan-aragga ah wuxuu qorsheeyaa danta berrito." },
-    { erey: "Fiditaan", macnaha: "In wax walba ay sii ballaartaan, meel walbana gaaraan.", tusaale: "Fiditaan weyn ayaa ku yimid adeegyada caafimaadka ee miyiga." },
-    { erey: "Fariisin", macnaha: "Meel guri ama xafiis ah oo si rasmi ah loogu dego ama loogu shaqeeyo.", tusaale: "Fariisinka guud ee guddiga afka wuxuu ku yaal caasimadda." },
-    { erey: "Feker", macnaha: "Awoodda maskaxda ee lagu falanqeeyo arrimaha kahor intaan go'aan la gaarin.", tusaale: "Fekerka degan wuxuu qofka ka badbaadiyaa qoomamo." },
-    { erey: "Fidmo-reeb", macnaha: "Qof ama nidaam u taagan inuu damiyo khilaafaadka ka dhex dhasha dadka.", tusaale: "Guurtidu waxay mar walba ahayd fidmo-reeb lagu kalsoon yahay." },
-    { erey: "Fiid", macnaha: "Waqtiga maalintu sii dhacayso oo habeenku soo galayo (qorrax dhaca ka dib).", tusaale: "Waxaan ballannay fiidkii hore si aan u dhammaystirno koodka." },
-    { erey: "Foor", macnaha: "Dabayl qabow oo badanaa keenta qaboobaha ama reebta ur udgoon.", tusaale: "Foorka subaxnimo ee miyiga wuxuu dib u soo nooleeyaa nafta." },
-    { erey: "Fasiraad", macnaha: "In si cad oo faahfaahsan loo sharxo wax adkaa oo la fahmi waayay.", tusaale: "Buuggani wuxuu bixinayaa fasiraad qoto dheer oo ku saabsan hiddaha." },
-    { erey: "Gadhwadeen", macnaha: "Qofka dadka horkacaya ee u horseedaya guul ama nidaam suuban.", tusaale: "Wasiirka cusub wuxuu noqday gadhwadeen hawlo badan beddelay." },
-    { erey: "Garasho", macnaha: "Awoodda fahamka, garaadka, iyo kala saarista danta iyo dhibka.", tusaale: "Odaygu wuxuu muujiyay garasho iyo xikmad fog." },
-    { erey: "Gar-gaar", macnaha: "Taageero ama caawinaad la siiyo qof dhibaateysan.", tusaale: "U fidinta gar-gaar dadka tabaalaysan waa waajib bini-aadamnimo." },
-    { erey: "Garnaqsi", macnaha: "In laba dhinac ay hor fadhiisato gar-yaqaan si loo kala saaro.", tusaale: "Garnaqsiga dhexmaray beelaha wuxuu ku dhammaaday isfaham." },
-    { erey: "Gar-waaqsi", macnaha: "In qofku qirto ama aqbalo runta ama khaladkiisa.", tusaale: "Gar-waaqsiga dhexmaray labada dhinac wuxuu keenay nabad." },
-    { erey: "Gar-yaqaan", macnaha: "Qof aqoon u leh sharciga iyo xeerarka oo u xilsaaran kala saarista dadka.", tusaale: "Gar-yaqaanku wuxuu soo saaray go'aan caddaalad ku dhisan." },
-    { erey: "Geesinimo", macnaha: "Karti iyo dhiiranaan qofku u leeyahay inuu wajaho khataraha.", tusaale: "Geesinimada ciidanka ayaa badbaadisay deegaanka." },
-    { erey: "Geyiga", macnaha: "Dhulka ama dalka aynu ku noolahay ee u gaarka ah umadda.", tusaale: "Taariikhda qaniga ah ee geyiga Soomaaliyeed." },
-    { erey: "Gobanimo", macnaha: "Xorriyad buuxda iyo in qofka ama dalku iskiis u madax-bannaanaado.", tusaale: "U dhimashada gobanimada dalka waa waajib muwaadinka saaran." },
-    { erey: "Gole", macnaha: "Madal ama meel rasmi ah oo loogu talagalay wada-tashiga ama go'aannada.", tusaale: "Golihii wasiirada ayaa maanta yeeshay kulan muhiim ah." },
-    { erey: "Gole-joog", macnaha: "Qof go'aan dhiiranaan leh oo goobta mar walba taagan.", tusaale: "Sxb, kani waa gole-joog iyo go'aan dhab ah!" },
-    { erey: "Go'aan", macnaha: "Xalka ugu dambeeya ee la qaato ka dib marka wax laga baaro.", tusaale: "Go'aankii maanta la qaatay wuxuu ahaa kii ugu habboonaa." },
-    { erey: "Guntasho", macnaha: "In loo diyaar-garoobo shaqo adag ama hiigsi weyn.", tusaale: "Waa inaan u guntannaa soo nooleynta afkeena." },
-    { erey: "Gurmad", macnaha: "U bixidda ama gargaarka degdeg ah ee loo fidinayo dad dhibaataysan.", tusaale: "Gurmadkii shacabka ayaa badbaadiyay qoysaskii biyuhu go'doomiyeen." },
-    { erey: "Guurti", macnaha: "Gole odayaal ah oo loo xilsaaray xallinta khilaafaadka iyo talada dalka.", tusaale: "Guurtidii hore waxay ahaayeen lafdhabarta nabadgelyada." },
-    { erey: "Gabaad", macnaha: "Meel ammaan ah ama hoy lagala galo dhibta, roobka, ama cadawga.", tusaale: "Geedka weyn wuxuu noo ahaa gabaad xilligii qorraxda kulul." },
-    { erey: "Gallad", macnaha: "Naxariis, bixin, ama nimco uu Eebbe qofka siiyo si dhalad ah.", tusaale: "Caafimaadku waa gallad weyn oo aan lacag lagu iibsan karin." },
-    { erey: "Ganeeci", macnaha: "Qanacsanaanta guud ee qofku ka dhex helo naftiisa ama shaqadiisa.", tusaale: "Ganacsade walba wuxuu raadiyaa ganeeciga macaamiisheeda." },
-    { erey: "Guraas", macnaha: "Saliid dabiici ah oo laga soo saaro xoolaha ama geedaha qaarkood.", tusaale: "Guraaska geedkaas waxaa loo isticmaalaa daawaynta nabraha." },
-    { erey: "Guul", macnaha: "Himilada ama bartilmaameedka la hiigsanayey oo si dhab ah loo gaaro.", tusaale: "Dadaalku waa wadada kaliya ee horseedda guusha." },
-    { erey: "Habayn", macnaha: "Isku-duba-ridka iyo hagaajinta waxyaabo kala daadsanaa.", tusaale: "Habaynta xogta website-ka waxay fure u tahay nidaamka suuban." },
-    { erey: "Hadal-hayn", macnaha: "Mowduuc ama dhacdo ay dadka intooda badan ka sheekaysanayaan.", tusaale: "Sheegashada guusha dhalinyarada ayaa noqotay hadal-haynta magaalada." },
-    { erey: "Hadhaw", macnaha: "Waqti dambe oo mustaqbalka ah ama inta lagu jiro maalinta.", tusaale: "Dadaal maanta si aad hadhaw ugu farxdo mirahaaga." },
-    { erey: "Hagar-bax", macnaha: "In qofku si hagar la'aan ah oo daacad ah u qabto hawl loo igmaday.", tusaale: "Shaqaalaha caafimaadku waxay muujiyeen hagar-bax weyn." },
-    { erey: "Hal-abuur", macnaha: "Karti iyo hibo maskaxeed oo lagu keeno fikrado, farsamooyin ama suugaan cusub.", tusaale: "Dhalinyarada Soomaaliyeed waxay leeyihiin hal-abuur dhanka tignoolajiyada ah." },
-    { erey: "Hal-adayg", macnaha: "Adkaysi iyo go'aan adayg qofku muujiyo marka xaaladuhu adkaadaan.", tusaale: "Gabadhaas ganacsatada ah waxay muujisay hal-adayg weyn oo lagu daydo." },
-    { erey: "Hanka", macnaha: "Himilo, yool, ama hiigsi fog oo qofku leeyahay.", tusaale: "Hanka maanta waa mid dhalinyarada kicinaya." },
-    { erey: "Haybad", macnaha: "Sharaf, shakhsiyad xoogan, ama xurmo dabiici ah oo qofka ka muuqata.", tusaale: "Odayga guurtida ah wuxuu leeyahay haybad laga naxsan yahay." },
-    { erey: "Hiddaha", macnaha: "Dhaqankii, murtidii, iyo hab-nololeedkii ay dadku ka dhaxleen odayaashoodii hore.", tusaale: "Ilaalinta hiddaha iyo dhaqanka waa waajib saaran maanta." },
-    { erey: "Hiigsi", macnaha: "Hami fogaaday iyo yool mustaqbal oo la rabo in la gaaro.", tusaale: "Hiigsigeyna fog waa inaan dhisno website-kan ugu weyn." },
-    { erey: "Hiigso-dheer", macnaha: "Yool ama hami fog oo u baahan waqti iyo dadaal weyn si loo rumeeyo.", tusaale: "Website-kan wuxuu leeyahay hiigso-dheer oo dhaxal-gal ah." },
-    { erey: "Hiil", macnaha: "Taageero ama garab-istaag la siiyo qof u baahan caawinaad.", tusaale: "Hiil iyo hooba dhalinyarada waa in lala garab taagnaado." },
-    { erey: "Himilo", macnaha: "Hiigsi, hami, ama waxa uu qofku doonayo inuu mustaqbalka gaaro.", tusaale: "Himilada weyn ee dalku waa isku-fillaansho dhaqaale." },
-    { erey: "Hoggaan", macnaha: "Qofka ama kooxda dadka horkacaysa ee hagaysa fulinta yoolal.", tusaale: "Hoggaan suuban wuxuu dalka u horseedaa nabad iyo horumar." },
-    { erey: "Hoy", macnaha: "Guri ama meel ammaan ah oo uu qofku dego kuna nool yahay.", tusaale: "Nabadi waxay ka bilaabataa hoyga qoyska dhexdiisa." },
-    { erey: "Hufnaan", macnaha: "In shaqada loo qabto si nadiif ah, daacad ah, oo aan khayaanayn lahayn.", tusaale: "Maamul wanaagu wuxuu ku dhismaa hufnaan iyo cadaalad." },
-    { erey: "Hubanti", macnaha: "Sugnaan iyo xaqiiqo biyo-kama-dheexecutable ah oo aan shakki ku jirin.", tusaale: "Waa hubanti in dhalinyaradu ay beddeli karaan mustaqbalka." },
-    { erey: "Huga", macnaha: "Dharka ama marada qofku xirto si uu jirkiisa u asturo.", tusaale: "Huga hiddaha iyo dhaqanka Soomaaliyeed wuxuu leeyahay bilic gaar ah." },
-    { erey: "Hulaaq", macnaha: "Kicidda ama qarax weyn oo dab ah ama xaalad kacsan oo bulshada dhexdeeda ah.", tusaale: "Hulaaqii dabka ayaa si degdeg ah loo damiyay." },
-    { erey: "Hanti", macnaha: "Wixii lacag ah, xoolo ah, ama hanti ma guurto ah oo qof ama qaran leeyahay.", tusaale: "Aqoontu waa hantida ugu qaalisan ee qofku barto." },
-    { erey: "Iftiimin", macnaha: "Sharaxaad, sifayn, ama caddayn laga bixiyo wax mugdi ama mugdi ku jiray.", tusaale: "Maqaalkani wuxuu si fiican u iftiimiyay taariikhdii hore ee geyiga." },
-    { erey: "Isku-duubni", macnaha: "Midnimo, wada-jir, iyo in gacmaha isku-jira wax loo wajaho.", tusaale: "Isku-duubnida bulshadu waa furaha guul kasta oo la hiigsanayo." },
-    { erey: "Isku-fillaansho", macnaha: "In bulsho ama dal uu soo saarto wax kasta oo uu u baahan yahay isagoon cid kale ku tiirsanayn.", tusaale: "Falashada dhulku waxay inoo horseedaysaa isku-fillaansho cunto." },
-    { erey: "Ixtiraam", macnaha: "Qaddarin, tixgelin, iyo maamuus la siiyo dadka waayeelka ah ama mudan.", tusaale: "Ixtiraamka waalidku waa waajib saaran ubad kasta." },
-    { erey: "Ilaalin", macnaha: "Daryeel, kor-joogteyn, iyo badbaadin la siiyo deegaanka ama hantida guud.", tusaale: "Ilaalinta duur-joogta waxay qayb ka tahay bilicda dalka." },
-    { erey: "Iimaan", macnaha: "Qanacsanaanta nafta iyo rumayn dhab ah oo qofku ku qabo abuuraha.", tusaale: "Iimaanku wuxuu qofka u horseedaa deggenaan iyo dulqaad." },
-    { erey: "Ileys", macnaha: "Nuur ama iftiin hgaya dadka xilliga mugdiga, sidoo kale loo isticmaalo aqoonta.", tusaale: "Waxbarashadu waa ileyska haga mustaqbalka dhalinyarada." },
-    { erey: "Ilbaxnimo", macnaha: "Heerka horumar, aqoon, iyo nidaam suuban oo bulsho ay gaarto.", tusaale: "Taariikhda fog ee geyigu waxay muujinaysaa ilbaxnimo fac weyn." },
-    { erey: "Inkiro", macnaha: "In qofku diido ama qariyo run jirtay ama abaal loo galay.", tusaale: "Ma wanaagsana inaad inkirto dadaalka saaxiibkaa kuu galay." },
-    { erey: "Isu-soo-bax", macnaha: "Kulanka weyn oo ay dadku iskugu yimaadaan fagaarayaasha si ay dareen u muujiyaan.", tusaale: "Isu-soo-bax weyn ayaa maanta ka dhacay caasimadda dalka." },
-    { erey: "Is-faham", macnaha: "Heshiis iyo is-afgarad dhexmara laba dhinac oo markii hore iskhilaafsanaa.", tusaale: "Is-fahamka reeraha wuxuu soo afjaray colaaddii miyiga." },
-    { erey: "Is-kalsooni", macnaha: "Awoodda iyo aaminaadda qofku ku qabo kartida naftiisa.", tusaale: "Is-kalsoonidu waa tillaabada ugu horreysa ee guusha laga gaaro nolosha." },
-    { erey: "Is-garab-istaag", macnaha: "Hiil iyo taageero dhab ah oo loo fidiyo qof dhibaateysan ama hawl adag ku jira.", tusaale: "Is-garab-istaagga barbaarta wuxuu dhisay isbitaalka deegaanka." },
-    { erey: "Is-beddel", macnaha: "Hanaanka wax kasta looga beddelo qaabkii hore loona wareejiyo qaab cusub oo ka wanaagsan.", tusaale: "Hoggaanka cusub wuxuu keenay is-beddel muuqda oo dhanka hufnaanta ah." },
-    { erey: "Iskor-tilis", macnaha: "Qof ama maamul go'aankiisa iska leh oo aan cid kale u ddictate-gareyn karin.", tusaale: "Geyigeenu waa mid iskor-tilis ah oo xorriyadiisa ku faana." },
-    { erey: "Jaalle", macnaha: "Erey loo isticmaalo saaxiibka, garabka, ama midabka jidka iftiimiya.", tusaale: "Kani waa jaalle dhab ah oo hawsha ila wadaaga." },
-    { erey: "Jahan", macnaha: "Jiho, weji, ama dhanka saxda ah ee loo socdo ama wax loo maareeyo.", tusaale: "Qorshaha cusub wuxuu na tusay jahanka saxda ah ee shaqada." },
-    { erey: "Jid-bixiye", macnaha: "Qofka ama nidaamka tilmaamaya waddada saxda ah ee lagu guulaysan karo.", tusaale: "Aqoontu waa jid-bixiyaha nolosha aadanaha." },
-    { erey: "Jihaad", macnaha: "Dadaal weyn iyo halganka loo galo difaaca xaqa, diinta, ama dalka.", tusaale: "Halgankii xorriyad-doonka wuxuu ahaa jihaad loo galay gobanimada." },
-    { erey: "Jiriid", macnaha: "Wargeys, khaanad xogeed, ama buug maalinle ah oo lagu qoro dhacdooyinka.", tusaale: "Jiriidda rasmiga ah ee dawladda waxaa lagu daabacay xeerka cusub." },
-    { erey: "Jiritaan", macnaha: "Ahaanshiyaha, badbaadada, iyo dhabnimada shay ama umad leedahay.", tusaale: "Ilaalinta afka hooyo waa saldhigga jiritaanka umad kasta." },
-    { erey: "Jidbaysan", macnaha: "Qof dareenkiisu aad u kacay sababo la xiriira jacayl, suugaan, ama hanoqaad.", tusaale: "Bulshadu waxay ahayd mid jidbaysan markii ay maqleen maansada cusub." },
-    { erey: "Jiilaal", macnaha: "Xilli qallalan oo qabow oo ka mid ah afarta xilli ee sanadka Soomaalida.", tusaale: "Jiilaalkii adkaa waa laga baxay, waxaana lagu dhowdahay gu'gii." },
-    { erey: "Jilid", macnaha: "In la matalo ama la weyneeyo dhaqan, hab-socod, ama shakhsiyad kale.", tusaale: "Riwaayaddii xalay waxay ahayd jilid aad u tayo sarreysa." },
-    { erey: "Jid-gooyo", macnaha: "Meel dhib weyn ama baaddis lagula tago dadka safarka ah, taas oo sharcigu ka reebayo.", tusaale: "Ciidanka ammaanku waxay ku guuleysteen inay baabi'iyaan jid-gooyooyinkii." },
-    { erey: "Jujuub", macnaha: "In qof lagu qasbo wax aanu raali ka ahayn ama xoog lagu muquuniyo.", tusaale: "Hoggaanka suuban kuma dhismo jujuub ee wuxuu ku dhismaa wada-tashi." },
-    { erey: "Juqraafi", macnaha: "Aqoonta ku saabsan dhulka, deegaanka, iyo qaab-dhismeedka khariidada.", tusaale: "Juqraafiga Soomaaliya wuxuu inoo sahlayaa inaan baranno khayraadka geyiga." },
-    { erey: "Jariimo", macnaha: "Dambi weyn ama fal xun oo ka horimaanaya sharciga iyo bini-aadamnimada.", tusaale: "In la waxyeelleeyo dadka shacabka ah waa jariimo aan la cafiya karin." },
-    { erey: "Jawharad", macnaha: "Shay aad u qaali ah oo dhalaalaya, sidoo kale loo isticmaalo qofka murtida iyo qiimaha weyn leh.", tusaale: "Gabadha aqoonta lihi waa jawharad u iftiimaysa qoyskeeda." },
-    { erey: "Jid", macnaha: "Waddada, tubta, ama habka loo maro gaaritaanka meel ama yool.", tusaale: "Dadaalku waa jidka kaliya ee loo maro guusha." },
-    { erey: "Kala-dambayn", macnaha: "Ilaalinta sharciga, nidaamka, iyo kala sarreynta maamulka si nabadgelyo u jirto.", tusaale: "Kala-dambaynta iyo nabaddu waa aasaaska horumarka bulshada." },
-    { erey: "Kala-gariir", macnaha: "Naxdin ama baqdin weyn oo qofka ku dhacda markii uu arko dhacdo weyn.", tusaale: "Warka dhiilada leh wuxuu keenay kala-gariir dhexmaray reerka." },
-    { erey: "Kalsooni", macnaha: "Aaminaad buuxda oo qofku u qabo naftiisa, saaxiibkiis, ama maamul jira.", tusaale: "Kalsoonida shacabku waa awoodda ugu weyn ee dawladnimada." },
-    { erey: "Kal-kaal", macnaha: "Gargaar, daryeel, ama u adeegidda dadka jiran iyo kuwa daciifka ah.", tusaale: "Kalkaaliyaha caafimaadku wuxuu qabtay shaqo hagar-bax ah." },
-    { erey: "Kandho", macnaha: "Xamaasad, diirimaad, ama firfircooni dheeraad ah oo shaqo lagu bilaabo.", tusaale: "Barbaartu waxay ku dhex jirtay kandho iyo hawlkarri weyn." },
-    { erey: "Karti", macnaha: "Awoodda, aqoonta, iyo hifada qofku u leeyahay inuu shaqada u qabto si hufan.", tusaale: "Gabadhaas gadhwadeenka ah waxay muujisay karti aad u sarreysa." },
-    { erey: "Kayd", macnaha: "Hanti, cunto, ama xog si ammaan ah loo dhigo si mustaqbalka loo isticmaalo.", tusaale: "Kaydka biyaha ee magaalada wuxuu ku filan yahay xilliga xagaaga." },
-    { erey: "Khaas", macnaha: "Wax gaar u ah qof, koox, ama ujeedo cayiman oo aan guud ahaan loo wadaigin.", tusaale: "Koodhkan waxaa loo xorreeyay si khaas ah oo qaamuuskaaga u gaar ah." },
-    { erey: "Khayraad", macnaha: "Nimcooyinka dabiiciga ah ee dhulka ama badda ku jira ee wax soo saarka leh.", tusaale: "Badda Soomaaliya waxay ceesi tahay khayraad aan lala hami karin." },
-    { erey: "Khilaaf", macnaha: "Is-maandhaaf, muran, ama isku-dhac dhexmara laba dhinac oo wax isku qabtay.", tusaale: "Wadahadalku waa jidka ugu habboon ee lagu xalliyo khilaafaadka." },
-    { erey: "Kicin", macnaha: "Dhiirigelin, kicin dareen, ama bilaabista hawl guud oo bulshada khuseysa.", tusaale: "Maansadii abwaanka waxay keentay kicin dhanka waddaniyadda ah." },
-    { erey: "Koor", macnaha: "Bir ama qori dalool ah oo qoorta looga xiro geela si codkiisa loogu raado.", tusaale: "Koorta geela yeeraysa waxay muujinaysaa in xeradii dhowdahay." },
-    { erey: "Koraan", macnaha: "Koraanka, koritaanka, ama qaabka wax u weynaadaan nidaam ahaan.", tusaale: "Koraanka dhaqaalaha dalku wuxuu u baahan yahay maalgelin." },
-    { erey: "Kormeer", macnaha: "U kuur-galka, baaritaanka, iyo eegista sida shaqadu u socoto.", tusaale: "Guddiga afka ayaa maanta kormeer ku tagay dugsiyada caasimadda." },
-    { erey: "Kulmiye", macnaha: "Astaanta waxyaabo kala duwan hal meel iskugu keenta ama isku xirta.", tusaale: "Website-kan wuxuu noqon doonaa kulmiyaha murtida afka Soomaaliga." },
-    { erey: "Labo-shishe", macnaha: "Wax labada dhinacba saameyn ku leh ama laba weji leh.", tusaale: "Garnaqsiga runta ahi waa mid labo-shisheba u caddaalad falaya." },
-    { erey: "Laf-dhabar", macnaha: "Tiirka ugu muhiimsan ama saldhigga uu wax kasta ku taagan yahay.", tusaale: "Dhalinyaradu waa laf-dhabarta horumarka iyo dhismaha dalka." },
-    { erey: "Lag", macnaha: "Xisaab weyn ama tiro lacag ah oo gaaraysa boqol kun (100,000).", tusaale: "Ganacsigiisu wuxuu guul ku gaaray dhowr lag oo lacag ah." },
-    { erey: "Laxanka", macnaha: "Qaabka miisaaman ee codka ama suugaanta loo tixiyo si ay dhegta ugu macaanaato.", tusaale: "Heesta cusub waxay leedahay laxan aad u degan oo soo jiidasho leh." },
-    { erey: "Laba-gaddoon", macnaha: "In qofku si degdeg ah u beddelo go'aankiisa ama fekerkiisa hore.", tusaale: "Ma wanaagsana laba-gaddoonka marka hawl weyn lagu jiro." },
-    { erey: "La-tashi", macnaha: "In fikrado iyo talooyin la iswaydaarsado kahor intaan go'aan la gaarin.", tusaale: "La-tashiga dadka aqoonta leh wuxuu kaa badbaadiyaa khasaaraha." },
-    { erey: "Leexasho", macnaha: "Ka fogaanshaha jidkii rasmiga ahaa ama xeerkii u dhowaa nidaamka.", tusaale: "Maamulku ma ogolaan doono wax leexasho ah oo sharciga ka horimaanaya." },
-    { erey: "Libaax-gale", macnaha: "Meel khatar ah oo geesi kaliya ku dhiiran karo, ama tusaale loo soo qaato qof dhiiran.", tusaale: "Ninkii hawshaas adag u guntaday wuxuu ahaa libaax-gale." },
-    { erey: "Libaaxnimo", macnaha: "Karti, oggolaansho weyn, ama deeqsinimo sare oo qofku muujiyo.", tusaale: "Wuxuu muujiyay libaaxnimo markii uu saaxiibkii u tanaasulay." },
-    { erey: "Ligligan", macnaha: "Wax gariiraya ama aan sal adag ku taagnayn oo halis u ah inuu dumo.", tusaale: "Gidaarka guri-qadiimiga ah wuxuu ahaa mid ligligan." },
-    { erey: "Lilaahi", macnaha: "Wax kasta oo loo qabto si daacad ah oo aan dan shakhsi ah ama khayaano ku jirin.", tusaale: "Shaqada lilaahiga ah mar walba guul bay ku dhammaataa." },
-    { erey: "Loxon", macnaha: "Dabayl xoogan oo badanaa keenta qaboobaha ama xilliyada isbeddelka cimilada.", tusaale: "Loxontii xalay dhacaysay waxay rari kartay teendhooyinka." },
-    { erey: "Lula", macnaha: "In wax hal dhinac loo rago ama la ruxo, sidoo kale loo isticmaalo lulmada hurdada.", tusaale: "Dabaylaha badda ayaa markabka lulayay." },
-    { erey: "Lumitaan", macnaha: "In wax la waayo ama qofku ka dhumo jidkii saxda ahaa ee uu ku socday.", tusaale: "Ilaalinta taariikhda waxay inoo sahlaysaa inaan ka badbaadno lumitaan." },
-    { erey: "Laba-shisheeye", macnaha: "Labada dhinac ee aan isku deegaanka ama isku fahamka ahayn.", tusaale: "Wadahadalku wuxuu isku soo dhoweeyay laba-shisheeye oo isku khilaafsanaa maamulka." },
-    { erey: "Maamuus", macnaha: "Sharaf, ixtiraam, iyo qaddarin weyn oo la siiyo qof mudan.", tusaale: "Aqoonyahanka dalku wuxuu mudan yahay maamuus sare iyo tixgelin." },
-    { erey: "Maamul-wanaag", macnaha: "Hanaanka maamul oo ku dhisnaan caddaalad, hufnaan, iyo u adeegidda shacabka.", tusaale: "Maamul-wanaagu waa furaha dhabta ah ee horumarka bulshada." },
-    { erey: "Maangal", macnaha: "Wax kasta oo caqliga suuban uu aqbali karo, runna u dhow.", tusaale: "Aragtida uu soo jeediyay dhalinyarada waxay ahayd mid maangal ah." },
-    { erey: "Maanso", macnaha: "Ereyada miisaaman ee suugaanta ah sida gabayga, jiiftooyinka, iyo geeraarka.", tusaale: "Abwaanku wuxuu tiriyay maanso ka hadlaysa qiimaha nabadgelyada." },
-    { erey: "Madax-bannaani", macnaha: "In qofka ama dalku uu xor yahay, go'aankiisana iska leeyahay iyadoon cid kale u talin.", tusaale: "Soomaaliya waxay u dabbaaldegaysaa sanadguurada madax-bannaanida." },
-    { erey: "Maddal", macnaha: "Waqti ama meel cayiman oo loo ballamay in lagu kulmo si hawl loo qabto.", tusaale: "Maddashii shaqada ee maanta weeynu wada joognaa sxb." },
-    { erey: "Malgal", macnaha: "In hanti ama lacag la geliyo mashruuc si faaiido looga soo saaro (Investment).", tusaale: "Malgalinta tignoolajiyada waxay sahlaysaa mustaqbal ifaya." },
-    { erey: "Maneeco", macnaha: "Wanaag ama nicmo weyn oo qofka ka badbaadisa dhibaatada iyo baahida.", tusaale: "Nabaddu waa maneecada koowaad ee nolosha ubadka." },
-    { erey: "Manfaaco", macnaha: "Wax kasta oo faaiido, dheeri, ama maslaxad u leh qofka iyo bulshada.", tusaale: "Aqoonta la barto waxay leedahay manfaaco adduun iyo aakhiraba." },
-    { erey: "Marag", macnaha: "Qof ama xog marag ka ah dhacdo jirtay si runta loo xaqiijiyo.", tusaale: "Garyaqaanku wuxuu codsaday in la keeno marag cad." },
-    { erey: "Masiir", macnaha: "Mustaqbalka dambe, aayatiinka, ama go'aanka ugu dambeeya ee dad ama dal leeyahay.", tusaale: "Wada-tashigu wuxuu go'aamiyaa masiirka suuban ee umadda." },
-    { erey: "Matalaad", macnaha: "In qof ama koox loo xilsaaro inay u hadlaan ama matalaan dad kale.", tusaale: "Dhalinyaradu waxay heleen matalaad fiican oo dhanka maamulka ah." },
-    { erey: "Meeleyn", macnaha: "In qof ama shay la dhigo meesha ku habboon nidaam ahaan.", tusaale: "Meeleynta shaqaalaha aqoonta leh waxay kordhisaa wax-soo-saarka." },
-    { erey: "Miisaan", macnaha: "Caddadka, culeyska, ama qiimaha weyn ee shay ama hadal leeyahay.", tusaale: "Hadalka odayga guurtida ah wuxuu lahaa miisaan weyn." },
-    { erey: "Murtida", macnaha: "Hadal gaaban oo xikmad qoto dheer leh, kuna dhex jira suugaanta ama maahmaahyada.", tusaale: "Odaygu wuxuu caan ku ahaa u hadlista qaab murtidu ku dhex jirto." },
-    { erey: "Nabadgelyo", macnaha: "Xaalad deganaan ah oo ka fogaanaysa cabsi, dagaal, iyo dhibaato.", tusaale: "Nabadgelyadu waa tiirka ugu weyn ee noloshu ku istaagto." },
-    { erey: "Nabad-doon", macnaha: "Qof u taagan daminta colaadaha iyo dhex-dhexaadinta dadka iskhilaafay.", tusaale: "Nabad-doonka deegaanka wuxuu ku guuleystay inuu reeraha heshiisiiyo." },
-    { erey: "Nadiif", macnaha: "Wax kasta oo ka fogaaday wasakh, qashin, ama dhalanrog dhanka nidaamka ah.", tusaale: "Magaalada nadiifta ahi waxay astaan u tahay ilbaxnimada dadka degan." },
-    { erey: "Naf-hurnimo", macnaha: "In qofku u huro naftiisa difaaca dalkiisa, dadkiisa, ama aaminsanaantiisa.", tusaale: "Halgamaagii hore wuxuu muujiyay naf-hurnimo weyn oo taariikhda gashay." },
-    { erey: "Nasteexo", macnaha: "Talo wanaagsan oo qof loogu rabo khayr, ama xaalad degan oo raaxo leh.", tusaale: "Talooyinka waalidku waa nasteexo hagaysa mustaqbalka ubadka." },
-    { erey: "Naxariis", macnaha: "Dareen jilicsan oo qofku u muujiyo dadka daciifka ah ama makhluuqa kale.", tusaale: "Is-caawinta iyo naxariistu waa sifooyinka ugu wanaagsan ee dadka suuban." },
-    { erey: "Nidaam", macnaha: "Qaabka kala horreynta iyo habaynta shaqooyinka si ay u noqdaan kuwo socda.", tusaale: "Nidaamka koodhka ee suuban wuxuu sahlayaa in la dhisidda App weyn." },
-    { erey: "Nimco", macnaha: "Barwaaqo, cunto, iyo khayraad badan oo Eebbe ku deeqo si dabiici ah.", tusaale: "Roobkii gu'ga ka dib, dhulku wuxuu galay nimco iyo cagaar buuxa." },
-    { erey: "Niyad-sami", macnaha: "In qofku wax u fikiro si toosan oo hami leh, isagoo dadka kalena wanaag u raba.", tusaale: "Niyad-samida shaqaalaha ayaa kor u qaaday sumcadda shirkadda." },
-    { erey: "Niyad-jabsan", macnaha: "Xaalad qofku dareemo marka ay u fuli weydo himilo ama ballan uu rabay.", tusaale: "Ma wanaagsana inaad niyad-jabto, dadaalku mar walba wuu guulaystaa." },
-    { erey: "Nolosha", macnaha: "Hanaanka jiritaan ee aadanaha, xayawaanka, iyo dhirta inta ay neefsanayaan.", tusaale: "Waxbarashadu waxay wax weyn ka beddeshaa nolosha qofka barta." },
-    { erey: "Noole", macnaha: "Wax kasta oo leh naf, neefsada, una baahan biyo iyo cunto si uu u jiro.", tusaale: "Biyuhu waa gunta koowaad ee uu noole kasta u baahan yahay." },
-    { erey: "Nuxur", macnaha: "Fikradda ugu muhiimsan ama dulucda rasmiga ah ee hadal ama qoraal leeyahay.", tusaale: "Maqaalkani wuxuu xambaarsan yahay nuxur aad u sarreeya oo murtidu ku dhex jirto." },
-    { erey: "Nuur", macnaha: "Iftiin ama ileys ka baxa shay dhalaalaya, sidoo kale loo isticmaalo aqoonta.", tusaale: "Aqoontu waa nuurka hagaya aadanaha dhanka horumarka." },
-    { erey: "Oday-dhaqameed", macnaha: "Oday garasho iyo xikmad u leh dhaqanka oo loo xilsaaray talada iyo nabadda.", tusaale: "Oday-dhaqameedku wuxuu udub-dhexaad u yahay xallinta khilaafaadka miyiga." },
-    { erey: "Ogaal", macnaha: "Xog, aqoon, ama faham uu qofku u leeyahay wax ku saabsan deegaankiisa ama shaqadiisa.", tusaale: "Dhalinyarada maanta waxay leeyihiin ogaal dheeraad ah oo dhanka tignoolajiyada ah." },
-    { erey: "Ogolaansho", macnaha: "In la aqbalo ama fasax la siiyo hawl ama codsi la soo jeediyay.", tusaale: "Maamulku wuxuu bixiyay ogolaansho buuxa oo lagu dhisayo maktabadda." },
-    { erey: "Orod", macnaha: "Socod aad u dheereeya oo lugaha lagu fuliyo, ama dadaal degdeg ah oo yool lagu gaaro.", tusaale: "Orodka nolosha waxaa ku guulaysta qofka dhabar-adayg muujiya." },
-    { erey: "Ood-wadaag", macnaha: "Dadka ama qoysaska deriska ah ee isku dhow, wadaaga naqshadda nolosha iyo ammaanka.", tusaale: "Ood-wadaaggu wuxuu u baahan yahay is-xurmeeyo iyo is-caawin joogto ah." },
-    { erey: "Oofin", macnaha: "Gudashada ama fulinta ballan hore loo galay ama axdi la dhigtay.", tusaale: "Oofinta ballantu waa astaanta koowaad ee qofka lagu kalsoonaan karo." },
-    { erey: "Ooray", macnaha: "Hadal ama qaylo dhiirigelin ah oo lagu taageerayo qof guul keenay ama geesi ah.", tusaale: "Galiilyadii garoonka waxay isku beddeshaa ooray markii goolka la dhaliyay." },
-    { erey: "Oorid", macnaha: "Erey asluubaysan oo loo isticmaalo xaaska ama afada qofka guursaday.", tusaale: "Ooridadiisa waxay si weyn ugu caawisay dhismaha ganacsigiisa." },
-    { erey: "Oor-gale", macnaha: "Qof si xikmad iyo aftahanimo ah u adeegsada erayada si uu dadka u soo jiito.", tusaale: "Abwaanku wuxuu ahaa oor-gale si fudud u xukuma quluubta dadka." },
-    { erey: "Olol", macnaha: "Kicidda dabka ama iftiinka weyn ee ka dhasha gubashada, sidoo kale loo isticmaalo firfircoonida.", tusaale: "Ololka waxbarashada ee dalka ka jira waa mid aad u dhiirigelinaya." },
-    { erey: "Olole", macnaha: "Hawl-gal ballaaran oo dad badan loogu baaqayo si yool gaar ah loo fuliyo (sida caafimaad ama doorasho).", tusaale: "Ololaha talaalka carruurta ayaa maanta ka dhex bilowday gobolka." },
-    { erey: "Oon", macnaha: "Baahida weyn ee loo qabo biyo marka uu qofku haraadan yahay.", tusaale: "Biyihii qaboobaa waxay ka jebiyeen oonkii adkaa ee safarka." },
-    { erey: "Oor", macnaha: "Ur udgoon ama hawo nadiif ah oo ka dhalata dhulka roobku ku da'ay.", tusaale: "Oorta subaxnimo ee miyiga waxay dib u soo nooleyneysaa nafta." },
-    { erey: "Qaamuus", macnaha: "Buug ama kayd xogeed oo lagu ururiyo erayada af iyo macnahooda si xaraf-xaraf ah.", tusaale: "Mashruuca qaamuusData wuxuu sahlayaa barashada iyo daryeelka afkeena hooyo." },
-    { erey: "Qaddarin", macnaha: "Ixtiraam, tixgelin, iyo maamuus sare oo loo muujiyo qof ama shay qiimo leh.", tusaale: "Ardayda muujisa asluubta waxay mar walba mudan yihiin qaddarin." },
-    { erey: "Qaran", macnaha: "Bulsho degan dhul cayiman oo leh maamul, calan, iyo xeerar u gaar ah.", tusaale: "Dhismaha qaranka wuxuu ku tiirsan yahay aqoonta iyo midnimada dhalinyarada." },
-    { erey: "Qandho-jebin", macnaha: "Daawo ama ficil loo isticmaalo in lagu qaboojiyo xanuunka ama kulaylka jidhka.", tusaale: "Cisbitaalka deegaanka waxaa laga helayaa adeegyo qandho-jebin ah oo degdeg ah." },
-    { erey: "Qanacsanaan", macnaha: "Degganaan iyo raali-noqoshada niyada ka timaada marka uu qofku helo wuxuu rabay.", tusaale: "Ganeeciga iyo qanacsanaanta macaamiisha waa hadafka koowaad ee shirkadda." },
-    { erey: "Qorshe", macnaha: "Hab iyo nidaam hore loo sii diyaariyay oo loo marayo fulinta shaqo ama yool.", tusaale: "Qorshe suuban oo la dejiyo wuxuu fududeeyaa gaaritaanka guusha." },
-    { erey: "Qoto-dheer", macnaha: "Wax kasta oo gun fog leh, ha ahaato dhul ama faham iyo aqoon weyn.", tusaale: "Abwaanku wuxuu ka hadlay arrimo si qoto-dheer u taabanaya taariikhda." },
-    { erey: "Quluubta", macnaha: "Halkaa ay ku kulmaan dareenka iyo niyada aadanaha (Qalbyada).", tusaale: "Hadal-macaanka iyo daacadnimadu waxay fure u yihiin hantidda quluubta dadka." },
-    { erey: "Qurux", macnaha: "Bilicda dabiiciga ah ama muqaalka suuban ee shay ama qof leeyahay.", tusaale: "Xeebaha dalku waxay caan ku yihiin qurux aan la inkiri karin." },
-    { erey: "Qaddar", macnaha: "Xaddiga, xilliga, ama waqtiga shay la qiyaasay, sidoo kale go'aanka Eebbe.", tusaale: "Shaqadani waxay qaadanaysaa qaddar yar oo waqti ah si loo dhammeeyo." },
-    { erey: "Qarax", macnaha: "Kicid ama dilaac weyn oo ka dhasha walxo kululaaday, sidoo kale loo isticmaalo guul degdeg ah.", tusaale: "Horumarka tignoolajiyada ee geyiga wuxuu keenay qarax dhanka hal-abuurka ah." },
-    { erey: "Qirasho", macnaha: "In qofku si cad u sheego runta ama uu oggolaado khalad uu sameeyay.", tusaale: "Qirashada runtu waxay fududaysaa in la helo caddaalad iyo isfaham." },
-    { erey: "Qoraa", macnaha: "Qof xirfad u leh diyaarinta iyo curinta buugaagta, maqaalada, ama sheekooyinka.", tusaale: "Qoraaga weyn wuxuu soo saaray buug cusub oo ku saabsan hiddaha." },
-    { erey: "Quus", macnaha: "In laga rajo dhigo wax markii hore la filayay ama lagu taamayay.", tusaale: "Dhalinyarada hanka leh marnaba ma qaataan quus, mar walba way dadaalaan." },
-    { erey: "Raad-reeb", macnaha: "Waxqabad, taariikh, ama dhaxal gal ah oo uu qofku uga tago dunida si loogu xasuusto.", tusaale: "Aqoonyahanka dhabta ahi wuxuu bulshadiisa uga tagaa raad-reeb waara." },
-    { erey: "Raajis", macnaha: "In hawl ama ballan la daahiyo oo dib loogu dhigo waqti ka dambeeya kii loogu talagalay.", tusaale: "In koodhka la dib-dhigo waxay keeni kartaa raajis ku yimaada mashruuca." },
-    { erey: "Raas", macnaha: "Qoys weyn, jilib, ama hanti isku xiran oo saldhig u ah dhalashada iyo reerka.", tusaale: "Odaygu wuxuu u yeeray madaxda raaska si looga tashado ammaanka." },
-    { erey: "Rajo", macnaha: "Filasho wanaagsan iyo niyad-sami laga qabo mustaqbalka ama wax la rabo in la helo.", tusaale: "Rajada dhalinyaradu leeyihiin waxay dhiirigelin u tahay horumarka geyiga." },
-    { erey: "Raqib", macnaha: "Qof ama nidaam loo xilsaaray inuu wax ilaaliyo, koor-joogteeyo, ama xogta ururiyo.", tusaale: "Kormeeruhu wuxuu u shaqaynayay si raqib ah si uu u hubiyo tayada dugsiga." },
-    { erey: "Raran", macnaha: "Agab, hanti, ama alaab la saaray gaari ama neef xoolaad ah si meel loogu qaado.", tusaale: "Gariirka safarka wuxuu ka dhashay baabuurka weyn ee raran." },
-    { erey: "Rasmi", macnaha: "Wax kasta oo sharciga ku dhex jira, sugan, dhab ah, oo la aqoonsan yahay.", tusaale: "Go'aanka rasmiga ah ee maamulka waxaa la soo saari doonaa berrito." },
-    { erey: "Rayi", macnaha: "Fikir, aragti, ama go'aan gaar ah oo qofku ka qabo mowduuc cayiman.", tusaale: "Rayiga dhalinyarada waa in la tixgeliyaa marka laga hadlayo tignoolajiyada." },
-    { erey: "Reer-gal", macnaha: "Qof la qabsaday nolosha magaalooyinka ama ilbaxnimada cusub ee bulshada.", tusaale: "Barbaarta maanta waa kuwo reer-gal ah oo aqoon u leh culuumta casriga ah." },
-    { erey: "Riwaayad", macnaha: "Sheeko dad lagu horkenayo fagaaro si loo baro dhaqan, asluub, ama madadaalo.", tusaale: "Riwaayaddii xalay waxay xambaarsaneyd nuxur aad u sarreeya." },
-    { erey: "Roob-doon", macnaha: "Baaq, duco, ama isu-soo-bax dadku sameeyaan si ay Eebbe uga warsadaan roob xilliga abaarta.", tusaale: "Bulshadu waxay u istaagtay roob-doon ka dib markii uu jiilaalku dheeraaday." },
-    { erey: "Rug", macnaha: "Guri, xarun, maktabad, ama meel deegaan oo si weyn loo yaqaano loona tixgeliyo.", tusaale: "Maktabadda cusub waxay noqon doontaa rugta cilmiga ee dhalinyarada." },
-    { erey: "Rumeeyo", macnaha: "In wax laga dhigo xaqiiqo muuqata, ama la fuliyo ballan iyo hami hore loo lahaa.", tusaale: "Dadaalkaaga joogtada ah wuxuu kaa caawinayaa inaad rumeeyo riyadaada." },
-    { erey: "Run", macnaha: "Xaqiiqo sugan oo aan been, shaki, ama dhalanrog ku jirin.", tusaale: "Hadalka runta ahi wuxuu qofka u horseedaa badbaado iyo sharaf." },
-    { erey: "Rasiid", macnaha: "Warqad ama caddayn muujinaysa in lacag la bixiyay ama hanti la kala qaatay.", tusaale: "Macaamiil kasta wuxuu xaq u leeyahay in la siiyo rasiidka rasmiga ah." }
-,
-        ];
+        let supabaseClient;
+        let channel;
+        let myRoomCode = "";
+        let myPlayerId = "p_" + Math.floor(1000 + Math.random() * 9000);
+        let mySecretWord = "";
+        let opponentWord = "";
+        let myWordSubmitted = false;
+        
+        let myScore = 0;
+        let opponentScore = 0;
+        let currentRound = 1;
+        let isRoundOver = false;
 
-        // 1. Farsamada si otomaatig ah loogu soo bandhigayo Qaamuuska
-        function displayQaamuus(data) {
-            const grid = document.getElementById('wordGrid');
-            grid.innerHTML = data.map(item => `
-                <div class="word-card">
-                    <h3>${item.erey}</h3>
-                    <p><strong>Macnaha:</strong> ${item.macnaha}</p>
-                    ${item.tusaale ? `<p style="font-style: italic; color: #777; margin-top: 5px;"><strong>Tusaale:</strong> "${item.tusaale}"</p>` : ''}
-                </div>
-            `).join('');
+        function logError(err) {
+            const el = document.getElementById('error-log');
+            el.style.display = 'block';
+            el.innerText += "\n[Cillad]: " + err;
         }
 
-        // 2. Kala wareegidda bogagga
-        function switchPage(pageId) {
-            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active-page'));
-            document.querySelectorAll('.main-nav button').forEach(b => b.classList.remove('active'));
-            
-            document.getElementById('page-' + pageId).classList.add('active-page');
-            if(document.getElementById('nav-' + pageId)) document.getElementById('nav-' + pageId).classList.add('active');
-        }
+        function initRealtime(roomCode) {
+            try {
+                // Furayaal HTTPS ah oo si toos ah u furan
+                const SUPABASE_URL = "https://fccvpsgudwexbshfxtqh.supabase.co"; 
+                const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjY3Zwc2d1ZHdleGJzaGZ4dHFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTU4OTAwMDAsImV4cCI6MjAyNTg5MDAwMH0.1v7M1B1Y-3V1gX_kM3N4bH84XzVlM1I3YzlVMTI1";
+                
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                
+                channel = supabaseClient.channel(roomCode, {
+                    config: { broadcast: { self: true } } // Naftasada u ogolaaw fariinta
+                });
 
-        // 3. Furista Admin-ka oo Password leh (Password: 1234)
-        function openAdmin() {
-            let password = prompt("Geli Password-ka Maamulka si aad wax u post gareyso:");
-            if (password === "7788") {
-                switchPage('admin');
-            } else {
-                alert("Password-ku waa khaldan yahay sxb!");
+                channel.on('broadcast', { event: 'game_event' }, (payload) => {
+                    let data = payload.payload;
+                    
+                    if (data.type === "SUBMIT_WORD") {
+                        if (data.sender !== myPlayerId) {
+                            opponentWord = data.word.toLowerCase();
+                            checkGameStatus();
+                        }
+                    }
+
+                    if (data.type === "CHAT_MSG") {
+                        appendMessage(data.text, data.sender === myPlayerId ? 'me' : 'opponent');
+                    }
+
+                    if (data.type === "ROUND_WINNER") {
+                        isRoundOver = true;
+                        document.getElementById('input-area').style.display = 'none';
+                        document.getElementById('next-round-btn').style.display = 'block';
+                        
+                        if (data.winner === myPlayerId) {
+                            myScore++;
+                            document.getElementById('my-score').innerText = myScore;
+                            appendMessage(`🎉 Waad guuleysatay! Waxaad heshay eraygii ahaa: [${opponentWord.toUpperCase()}]`, 'system');
+                        } else {
+                            opponentScore++;
+                            document.getElementById('opponent-score').innerText = opponentScore;
+                            appendMessage(`😢 Saaxiibkaa ayaa dhibicda helay! Wuxuu gartay eraygaagii oo ahaa: [${mySecretWord.toUpperCase()}]`, 'system');
+                        }
+                    }
+
+                    if (data.type === "RESET_ROUND") {
+                        resetRoundVariables();
+                    }
+                }).subscribe((status) => {
+                    document.getElementById('net-status').innerText = "Ku xiran server-ka (" + status + ")";
+                });
+
+            } catch (e) {
+                logError(e.message);
             }
         }
 
-        // 4. Keydinta iyo soo saarista Maqaallada (LocalStorage System)
-        document.getElementById('adminForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const title = document.getElementById('postTitle').value;
-            const body = document.getElementById('postBody').value;
-            const date = new Date().toLocaleDateString('so-SO', { year: 'numeric', month: 'long', day: 'numeric' });
-
-            const newPost = { title, body, date };
-            let posts = JSON.parse(localStorage.getItem('hanka_posts')) || [];
-            posts.unshift(newPost);
-
-            localStorage.setItem('hanka_posts', JSON.stringify(posts));
-            document.getElementById('adminForm').reset();
-            loadPosts();
-            switchPage('hordhac');
-        });
-
-                function loadPosts() {
-            const container = document.getElementById('postsContainer');
-            let posts = JSON.parse(localStorage.getItem('hanka_posts')) || [];
-            
-            // Qaybta 1-aad (Default Post) oo mar walba oollaysa
-            let defaultHTML = `
-                <article class="article-content">
-                    <div class="article-meta">
-                        <span class="category">Taxanaha Taariikhda</span>
-                        <span class="date">Juun 29, 2026</span>
-                    </div>
-                    <h2 class="article-title">Qaybta 1-aad: Boqortooyooyinkii Hore iyo Asalka Ereyada Lumay</h2>
-                    <div class="article-body">
-                        <p>Kusoo dhowaada qaybta koobaad ee taxanaheena ku saabsan taariikhda qaniga ah ee geyiga iyo dib u soo nooleynta Af-Soomaaliga saxda ah...</p>
-                    </div>
-                    <hr class="section-divider">
-                    <section class="comments-section">
-                        <h3>Aragtidaada Nala Wadaag</h3>
-                        <form class="comment-form" onsubmit="addComment(event, this)">
-                            <input type="text" placeholder="Magacaaga" required>
-                            <textarea rows="3" placeholder="Halkaan ku qor faalladaada..." required></textarea>
-                            <button type="submit" class="btn-submit">Soo Dir Faallada</button>
-                        </form>
-                        <div class="comments-list">
-                            <div class="comment-item"><strong>Cali Axmed</strong><p>Runtii af-soomaaliga saxda ah waa mid loo baahan yahay in la barto.</p></div>
-                        </div>
-                    </section>
-                </article>`;
-
-            // Halkan waxaan ku hagaajinnay in qoraalka cusub uu u jiri karo "white-space: pre-line" si khadadka u jabaan
-            let dynamicHTML = posts.map(post => `
-                <article class="article-content">
-                    <div class="article-meta">
-                        <span class="category">Taxanaha Taariikhda</span>
-                        <span class="date">${post.date}</span>
-                    </div>
-                    <h2 class="article-title">${post.title}</h2>
-                    <div class="article-body">
-                        <p style="white-space: pre-line;">${post.body}</p>
-                    </div>
-                    <hr class="section-divider">
-                    <section class="comments-section">
-                        <h3>Aragtidaada Nala Wadaag</h3>
-                        <form class="comment-form" onsubmit="addComment(event, this)">
-                            <input type="text" placeholder="Magacaaga" required>
-                            <textarea rows="3" placeholder="Halkaan ku qor faalladaada..." required></textarea>
-                            <button type="submit" class="btn-submit">Soo Dir Faallada</button>
-                        </form>
-                        <div class="comments-list"></div>
-                    </section>
-                </article>
-            `).join('');
-
-            // Halkan waxaan ku hubinnay in dynamicHTML (wixii aad soo post gareysay) lagu daro container-ka ka hor defaultHTML
-            container.innerHTML = dynamicHTML + defaultHTML;
+        function createRoom() {
+            myRoomCode = "room_" + Math.floor(1000 + Math.random() * 9000);
+            showSetupScreen(myRoomCode.replace("room_", ""));
+            initRealtime(myRoomCode);
+            document.getElementById('status-msg').innerText = "Qolka waa diyaar. Koodka u dir saaxiibkaa.";
         }
 
-
-        // 6. Farsamada Faallooyinka
-        function addComment(e, form) {
-            e.preventDefault();
-            const name = form.getElementsByTagName('input')[0].value;
-            const text = form.getElementsByTagName('textarea')[0].value;
-            const list = form.nextElementSibling;
-
-            const item = document.createElement('div');
-            item.classList.add('comment-item');
-            item.innerHTML = `<strong>${name}</strong><p>${text}</p>`;
-            list.appendChild(item);
-            form.reset();
+        function joinRoom() {
+            let code = document.getElementById('room-code-input').value.trim();
+            if (!code) return alert("Fadlan geli koodka qolka!");
+            
+            myRoomCode = "room_" + code;
+            showSetupScreen(code);
+            initRealtime(myRoomCode);
+            document.getElementById('status-msg').innerText = "Waa ku biirtay qolka. Qor eraygaaga.";
         }
 
-                       // 7. Farsamada Raadinta Casriga ah (Kaliya ereyada ka bilaabma xarfaha la qoray)
-        document.getElementById('searchBar').addEventListener('input', function(e) {
-            let word = e.target.value.trim().toLowerCase();
+        function showSetupScreen(code) {
+            document.getElementById('lobby-screen').classList.add('hidden');
+            document.getElementById('game-setup-screen').classList.remove('hidden');
+            document.getElementById('current-room-id').innerText = code;
+        }
+
+        function submitSecretWord() {
+            let word = document.getElementById('secret-word-input').value.trim();
+            if (!word) return alert("Fadlan qor erayga aad qarinayso!");
+
+            mySecretWord = word.toLowerCase();
+            myWordSubmitted = true;
+            document.getElementById('status-msg').innerText = "Eraygaaga waad xaraysay! Sugaya saaxiibkaa...";
             
-            // Haddii meesha raadintu maran tahay, soo bandhig qaamuuska oo dhan
-            if (word === "") {
-                displayQaamuus(qaamuusData);
-                return;
-            }
-            
-            // Wuxuu shaandheynayaa ereyada ka bilaabma ("startsWith") xarfaha la qoray dhab ahaantii
-            let filteredData = qaamuusData.filter(item => {
-                return item.erey.toLowerCase().startsWith(word);
+            channel.send({
+                type: 'broadcast',
+                event: 'game_event',
+                payload: { type: "SUBMIT_WORD", sender: myPlayerId, word: mySecretWord }
             });
+
+            checkGameStatus();
+        }
+
+        function checkGameStatus() {
+            if (myWordSubmitted && opponentWord !== "") {
+                document.getElementById('game-setup-screen').classList.add('hidden');
+                document.getElementById('gameplay-screen').classList.remove('hidden');
+                document.getElementById('input-area').style.display = 'flex';
+                document.getElementById('next-round-btn').style.display = 'none';
+            }
+        }
+
+        function sendChatMessage() {
+            if(isRoundOver) return;
+
+            let inputEl = document.getElementById('chat-input');
+            let text = inputEl.value.trim();
+            if (!text) return;
+
+            channel.send({
+                type: 'broadcast',
+                event: 'game_event',
+                payload: { type: "CHAT_MSG", sender: myPlayerId, text: text }
+            });
+
+            if (text.toLowerCase() === opponentWord) {
+                channel.send({
+                    type: 'broadcast',
+                    event: 'game_event',
+                    payload: { type: "ROUND_WINNER", winner: myPlayerId }
+                });
+            }
+
+            inputEl.value = "";
+        }
+
+        function startNextRound() {
+            channel.send({
+                type: 'broadcast',
+                event: 'game_event',
+                payload: { type: "RESET_ROUND" }
+            });
+        }
+
+        function resetRoundVariables() {
+            mySecretWord = "";
+            opponentWord = "";
+            myWordSubmitted = false;
+            isRoundOver = false;
+            currentRound++;
             
-            displayQaamuus(filteredData);
-        });
+            document.getElementById('round-number').innerText = currentRound;
+            document.getElementById('secret-word-input').value = "";
+            document.getElementById('status-msg').innerText = "Qor erayga wareegga cusub.";
+            
+            document.getElementById('gameplay-screen').classList.add('hidden');
+            document.getElementById('game-setup-screen').classList.remove('hidden');
+            document.getElementById('chat-box').innerHTML = `<div class="msg system">Wareeggii ${currentRound}-aad ayaa bilaamay!</div>`;
+        }
 
-
+        function appendMessage(text, side) {
+            let chatBox = document.getElementById('chat-box');
+            let msgEl = document.createElement('div');
+            msgEl.className = "msg " + side;
+            msgEl.innerText = text;
+            chatBox.appendChild(msgEl);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
     </script>
 </body>
 </html>
